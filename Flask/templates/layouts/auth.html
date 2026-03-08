@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>{% block title %}{% endblock %} - Priority Pulse</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: { primary: '#6e00ff', 'primary-hover': '#5a00d1' }
+                }
+            }
+        }
+    </script>
+    <style>
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="font-sans bg-[#f8f9fa] text-gray-900 antialiased overflow-x-hidden">
+    
+    <div class="flex min-h-screen w-full flex-row">
+        
+        <div class="relative hidden lg:flex w-1/2 flex-col bg-[#050b14] overflow-hidden">
+            
+            <div class="relative z-20 px-12 pt-12 flex items-center gap-3">
+                <div class="relative flex h-10 w-10 items-center justify-center bg-[#f3ebff] rounded-lg">
+                    <span class="material-symbols-outlined text-[28px] text-[#6e00ff] font-bold">ecg_heart</span>
+                </div>
+                <span class="text-2xl font-black tracking-tight text-white">Priority Pulse</span>
+            </div>
+
+            <div class="flex-1 flex flex-col justify-center relative z-10 w-full px-12 py-8">
+                <div class="w-full overflow-x-auto snap-x snap-mandatory flex gap-6 hide-scrollbar pb-8">
+                    
+                    <div class="snap-center shrink-0 w-full relative aspect-[4/5] max-h-[600px] rounded-3xl overflow-hidden shadow-2xl bg-gray-900 border border-white/10 group">
+                        <img alt="Fondo" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-50" src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop"/>
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#050b14] via-[#050b14]/80 to-transparent"></div>
+                        
+                        <div class="absolute bottom-0 left-0 p-10 w-full">
+                            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#6e00ff]/20 border border-[#6e00ff]/30 backdrop-blur-md mb-4">
+                                <span class="w-2 h-2 rounded-full bg-[#b87cff] animate-pulse"></span>
+                                <span class="text-[0.65rem] font-bold text-[#e9d5ff] uppercase tracking-wider">Productividad Gamificada</span>
+                            </div>
+                            <h2 class="text-4xl font-black text-white mb-3 leading-tight">Sube de nivel tu <span class="text-[#b87cff]">Rutina Diaria</span></h2>
+                            <p class="text-sm text-gray-400 font-medium leading-relaxed max-w-sm">Convierte las tareas aburridas en misiones épicas, gana medallas y mantén tu racha intacta.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="px-12 pb-8 text-xs font-bold text-gray-500 flex justify-between w-full relative z-20">
+                <span>© 2026 Priority Pulse Inc.</span>
+                <div class="flex gap-4">
+                    <a class="hover:text-white transition-colors" href="/privacidad">Privacidad</a>
+                    <a class="hover:text-white transition-colors" href="/terminos">Términos</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex w-full lg:w-1/2 flex-col justify-center bg-white relative">
+            
+            <div class="lg:hidden absolute top-6 left-6 flex items-center gap-2">
+                <span class="material-symbols-outlined text-3xl text-primary">ecg_heart</span>
+                <span class="text-lg font-black text-gray-900">Priority Pulse</span>
+            </div>
+
+            <div class="w-full max-w-[480px] mx-auto p-8 sm:p-12">
+                
+                <div class="mb-10 text-center">
+                    <h2 class="text-4xl font-black tracking-tight text-gray-900 mb-2">{% block heading %}Bienvenido{% endblock %}</h2>
+                    <p class="text-gray-500 text-sm font-medium">{% block subheading %}Ingresa tus datos para continuar.{% endblock %}</p>
+                </div>
+
+                <div class="bg-white rounded-3xl p-1 shadow-sm border border-gray-100">
+                    <div class="p-6 sm:p-8">
+                        
+                        <div class="flex mb-8 border-b border-gray-100 pb-1">
+                            <a href="/login" class="flex-1 pb-3 text-sm font-bold border-b-2 {% if request.path == '/login' %}border-primary text-primary{% else %}border-transparent text-gray-400 hover:text-gray-600{% endif %} transition-all text-center">
+                                Iniciar Sesión
+                            </a>
+                            <a href="/registro" class="flex-1 pb-3 text-sm font-bold border-b-2 {% if request.path == '/registro' %}border-primary text-primary{% else %}border-transparent text-gray-400 hover:text-gray-600{% endif %} transition-all text-center">
+                                Crear Cuenta
+                            </a>
+                        </div>
+
+                        {% block form_content %}{% endblock %}
+
+                    </div>
+                </div>
+
+                <p class="text-center text-xs text-gray-400 font-medium mt-8">
+                    Al continuar, aceptas nuestros <a class="font-bold text-gray-500 hover:text-primary transition-colors" href="/terminos">Términos de Servicio</a> y <a class="font-bold text-gray-500 hover:text-primary transition-colors" href="/privacidad">Política de Privacidad</a>.
+                </p>
+
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

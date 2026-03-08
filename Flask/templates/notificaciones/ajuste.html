@@ -1,0 +1,164 @@
+{% extends "layouts/app.html" %}
+
+{% block title %}Ajustes de Notificaciones{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto relative z-10 space-y-8">
+
+    <div>
+        <h1 class="text-3xl font-black text-gray-900 mb-2">Ajustes de Notificaciones</h1>
+        <p class="text-sm font-medium text-gray-500">Gestiona cómo y cuándo recibes alertas sobre tu productividad y actividad social.</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+
+        <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-gray-100 flex flex-col h-full">
+            <div class="mb-6">
+                <h2 class="flex items-center gap-2 text-lg font-black text-gray-900 mb-1">
+                    <span class="material-symbols-outlined text-primary">campaign</span>
+                    Canales de Notificación
+                </h2>
+                <p class="text-[0.8rem] font-medium text-gray-500">Elige a través de qué medios deseas recibir actualizaciones importantes.</p>
+            </div>
+
+            <div class="space-y-6 flex-1">
+                <div class="flex items-center justify-between gap-4">
+                    <div>
+                        <h4 class="text-sm font-bold text-gray-900">Notificaciones Push</h4>
+                        <p class="text-[0.7rem] font-medium text-gray-500">Alertas en tu escritorio y navegador</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                        <input type="checkbox" checked class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                    </label>
+                </div>
+
+                <div class="flex items-center justify-between gap-4">
+                    <div>
+                        <h4 class="text-sm font-bold text-gray-900">Correo Electrónico</h4>
+                        <p class="text-[0.7rem] font-medium text-gray-500">Resúmenes y alertas importantes a tu inbox</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                        <input type="checkbox" checked class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                    </label>
+                </div>
+
+                <div class="flex items-center justify-between gap-4">
+                    <div>
+                        <h4 class="text-sm font-bold text-gray-900">Dentro de la App</h4>
+                        <p class="text-[0.7rem] font-medium text-gray-500">Burbuja de notificaciones en la interfaz</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                        <input type="checkbox" checked class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-gray-100 flex flex-col h-full">
+            <div class="mb-6">
+                <h2 class="flex items-center gap-2 text-lg font-black text-gray-900 mb-1">
+                    <span class="material-symbols-outlined text-primary">tune</span>
+                    Eventos y Disparadores
+                </h2>
+                <p class="text-[0.8rem] font-medium text-gray-500">Personaliza qué eventos generan una alerta y con qué frecuencia.</p>
+            </div>
+
+            <div class="space-y-6 flex-1">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-orange-50 text-orange-500 flex items-center justify-center shrink-0 border border-orange-100">
+                        <span class="material-symbols-outlined text-[20px]">local_fire_department</span>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-sm font-bold text-gray-900 leading-tight">Racha en peligro</h4>
+                        <p class="text-[0.65rem] font-medium text-gray-500">Cuando estés a punto de perder tu racha diaria</p>
+                    </div>
+                    <div class="flex items-center gap-3 shrink-0">
+                        <select class="bg-gray-50 border border-gray-200 text-gray-700 text-xs font-bold rounded-lg px-2 py-1.5 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary appearance-none cursor-pointer">
+                            <option>Instantáneo</option>
+                            <option>Diario</option>
+                        </select>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" checked class="sr-only peer">
+                            <div class="w-10 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-yellow-50 text-yellow-500 flex items-center justify-center shrink-0 border border-yellow-100">
+                        <span class="material-symbols-outlined text-[20px]">emoji_events</span>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-sm font-bold text-gray-900 leading-tight">Nuevos logros</h4>
+                        <p class="text-[0.65rem] font-medium text-gray-500">Al desbloquear medallas o subir de nivel</p>
+                    </div>
+                    <div class="flex items-center gap-3 shrink-0">
+                        <select class="bg-gray-50 border border-gray-200 text-gray-700 text-xs font-bold rounded-lg px-2 py-1.5 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary appearance-none cursor-pointer">
+                            <option>Instantáneo</option>
+                            <option>Semanal</option>
+                        </select>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" checked class="sr-only peer">
+                            <div class="w-10 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-pink-50 text-pink-500 flex items-center justify-center shrink-0 border border-pink-100">
+                        <span class="material-symbols-outlined text-[20px]">favorite</span>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-sm font-bold text-gray-900 leading-tight">Actividad de amigos</h4>
+                        <p class="text-[0.65rem] font-medium text-gray-500">Me gusta y nuevos seguidores</p>
+                    </div>
+                    <div class="flex items-center gap-3 shrink-0">
+                        <select class="bg-gray-50 border border-gray-200 text-gray-700 text-xs font-bold rounded-lg px-2 py-1.5 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary appearance-none cursor-pointer">
+                            <option>Instantáneo</option>
+                            <option>Diario</option>
+                        </select>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" checked class="sr-only peer">
+                            <div class="w-10 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-[#f3ebff] text-primary flex items-center justify-center shrink-0 border border-[#e9d5ff]">
+                        <span class="material-symbols-outlined text-[20px]">smart_toy</span>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-sm font-bold text-gray-900 leading-tight">Recordatorios de IA</h4>
+                        <p class="text-[0.65rem] font-medium text-gray-500">Sugerencias inteligentes basadas en tus hábitos</p>
+                    </div>
+                    <div class="flex items-center gap-3 shrink-0">
+                        <select class="bg-gray-50 border border-gray-200 text-gray-700 text-xs font-bold rounded-lg px-2 py-1.5 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary appearance-none cursor-pointer">
+                            <option>Diario</option>
+                            <option>Semanal</option>
+                        </select>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" checked class="sr-only peer">
+                            <div class="w-10 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="flex justify-end items-center gap-4 mt-8">
+        <button type="button" class="text-sm font-bold text-gray-500 hover:text-gray-800 transition-colors">
+            Cancelar
+        </button>
+        <button type="submit" class="px-8 py-3 bg-primary hover:bg-primary-hover text-white rounded-xl text-sm font-bold shadow-md shadow-primary/20 transition-all">
+            Guardar cambios
+        </button>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,410 @@
+{% extends "layouts/app.html" %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block content %}
+<div class="space-y-12">
+    
+    <section>
+        <div class="mb-6">
+            <h1 class="text-4xl font-black text-gray-900 tracking-tight">¿Qué necesitas realizar ahora?</h1>
+            <p class="text-gray-600 font-medium mt-1 text-lg">Cuéntame tu plan, y yo te estructuraré tu plan de trabajo</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 bg-white/60 backdrop-blur-lg rounded-3xl shadow-sm border border-white p-4 flex flex-col h-56 relative overflow-hidden group focus-within:ring-2 focus-within:ring-primary/50 transition-all">
+                <textarea class="flex-1 w-full bg-transparent border-none text-gray-900 placeholder-gray-400 text-lg resize-none focus:ring-0 p-2" placeholder="Necesito planificar mi día ..."></textarea>
+                
+                <div class="flex justify-between items-center mt-4 p-2 bg-gray-50/80 rounded-2xl border border-gray-100">
+                    <button class="flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-white rounded-xl transition-colors font-bold text-sm">
+                        <span class="material-symbols-outlined text-[20px]">mic</span>
+                        Entrada de Voz
+                    </button>
+                    <button class="px-6 py-2.5 bg-primary text-white font-bold text-sm rounded-xl shadow-md hover:bg-primary-hover transition-all">
+                        Analizar
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 flex flex-col items-center justify-center text-center h-56 hover:shadow-md transition-shadow">
+                <h3 class="text-2xl font-black text-gray-900 mb-2">Entrada Manual</h3>
+                <p class="text-sm text-gray-500 mb-6 font-medium">Da click para agregar de forma manual</p>
+                <button class="w-full px-6 py-3 bg-primary text-white font-bold text-sm rounded-xl shadow-md hover:bg-primary-hover transition-all">
+                    Añadir Tarea
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="mb-6">
+            <h2 class="text-2xl font-black text-gray-900 tracking-tight">Feed de Tareas</h2>
+            <p class="text-sm text-gray-600 font-bold mt-1">Revisa tus actividades importantes del día y márcalas como completada para mantener tu racha.</p>
+        </div>
+
+        <div class="flex flex-wrap gap-2 mb-8 items-center border-b border-gray-200 pb-4">
+            <button class="px-4 py-1.5 bg-[#b87cff] text-white text-xs font-bold rounded-full">Todas</button>
+            <div class="w-px h-4 bg-gray-300 mx-2"></div>
+            <button class="px-3 py-1.5 text-gray-600 hover:text-gray-900 text-xs font-bold transition-colors">Completadas</button>
+            <div class="w-px h-4 bg-gray-300 mx-2"></div>
+            <button class="px-3 py-1.5 text-gray-600 hover:text-gray-900 text-xs font-bold transition-colors">Pendientes</button>
+            <div class="w-px h-4 bg-gray-300 mx-2"></div>
+            <button class="px-3 py-1.5 text-gray-600 hover:text-gray-900 text-xs font-bold transition-colors">Alta</button>
+            <div class="w-px h-4 bg-gray-300 mx-2"></div>
+            <button class="px-3 py-1.5 text-gray-600 hover:text-gray-900 text-xs font-bold transition-colors">Media</button>
+            <div class="w-px h-4 bg-gray-300 mx-2"></div>
+            <button class="px-3 py-1.5 text-gray-600 hover:text-gray-900 text-xs font-bold transition-colors">Baja</button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <div class="bg-white p-5 rounded-2xl shadow-sm border-2 border-blue-100 flex items-center gap-4 hover:border-blue-200 transition-colors">
+                <div class="w-12 h-12 bg-blue-50 text-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                    <span class="material-symbols-outlined text-[20px]">mail</span>
+                </div>
+                
+                <div class="flex-1">
+                    <h4 class="text-sm font-black text-gray-900 mb-0.5">Realizar Reporte de Laboratorio</h4>
+                    <p class="text-[0.65rem] font-bold text-gray-400 mb-2">Lunes 12 de Enero de 2026</p>
+                    <div class="flex gap-2">
+                        <span class="px-2 py-0.5 bg-gray-100 text-gray-500 text-[0.6rem] font-bold rounded-full border border-gray-200">#Escuela</span>
+                        <span class="px-2 py-0.5 bg-gray-100 text-gray-500 text-[0.6rem] font-bold rounded-full border border-gray-200">#Investigación</span>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <span class="px-3 py-1 bg-red-50 text-red-500 text-[0.65rem] font-black rounded-full border border-red-100 whitespace-nowrap">Prioridad Alta</span>
+                    <button class="w-8 h-8 rounded-full bg-gray-800 text-white flex items-center justify-center hover:bg-gray-700 transition-colors">
+                        <span class="material-symbols-outlined text-[16px]">check</span>
+                    </button>
+                    <button class="w-8 h-8 rounded-full bg-gray-50 text-yellow-500 border border-gray-200 flex items-center justify-center hover:bg-gray-100 transition-colors">
+                        <span class="material-symbols-outlined text-[14px]">edit</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-2xl shadow-sm border-2 border-[#e9d5ff] flex items-center gap-4 hover:border-primary transition-colors">
+                <div class="w-12 h-12 bg-blue-50 text-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                    <span class="material-symbols-outlined text-[20px]">mail</span>
+                </div>
+                <div class="flex-1">
+                    <h4 class="text-sm font-black text-gray-900 mb-0.5">Realizar Reporte de Laboratorio</h4>
+                    <p class="text-[0.65rem] font-bold text-gray-400 mb-2">Lunes 12 de Enero de 2026</p>
+                    <div class="flex gap-2">
+                        <span class="px-2 py-0.5 bg-gray-100 text-gray-500 text-[0.6rem] font-bold rounded-full border border-gray-200">#Escuela</span>
+                        <span class="px-2 py-0.5 bg-gray-100 text-gray-500 text-[0.6rem] font-bold rounded-full border border-gray-200">#Investigación</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="px-3 py-1 bg-red-50 text-red-500 text-[0.65rem] font-black rounded-full border border-red-100 whitespace-nowrap">Prioridad Alta</span>
+                    <button class="w-8 h-8 rounded-full bg-gray-800 text-white flex items-center justify-center hover:bg-gray-700 transition-colors">
+                        <span class="material-symbols-outlined text-[16px]">check</span>
+                    </button>
+                    <button class="w-8 h-8 rounded-full bg-gray-50 text-yellow-500 border border-gray-200 flex items-center justify-center hover:bg-gray-100 transition-colors">
+                        <span class="material-symbols-outlined text-[14px]">edit</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4 hover:border-gray-300 transition-colors">
+                <div class="w-12 h-12 bg-blue-50 text-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                    <span class="material-symbols-outlined text-[20px]">mail</span>
+                </div>
+                <div class="flex-1">
+                    <h4 class="text-sm font-black text-gray-900 mb-0.5">Realizar Reporte de Laboratorio</h4>
+                    <p class="text-[0.65rem] font-bold text-gray-400 mb-2">Lunes 12 de Enero de 2026</p>
+                    <div class="flex gap-2">
+                        <span class="px-2 py-0.5 bg-gray-100 text-gray-500 text-[0.6rem] font-bold rounded-full border border-gray-200">#Escuela</span>
+                        <span class="px-2 py-0.5 bg-gray-100 text-gray-500 text-[0.6rem] font-bold rounded-full border border-gray-200">#Investigación</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="px-3 py-1 bg-red-50 text-red-500 text-[0.65rem] font-black rounded-full border border-red-100 whitespace-nowrap">Prioridad Alta</span>
+                    <button class="w-8 h-8 rounded-full bg-gray-800 text-white flex items-center justify-center hover:bg-gray-700 transition-colors">
+                        <span class="material-symbols-outlined text-[16px]">check</span>
+                    </button>
+                    <button class="w-8 h-8 rounded-full bg-gray-50 text-yellow-500 border border-gray-200 flex items-center justify-center hover:bg-gray-100 transition-colors">
+                        <span class="material-symbols-outlined text-[14px]">edit</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4 hover:border-gray-300 transition-colors">
+                <div class="w-12 h-12 bg-blue-50 text-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                    <span class="material-symbols-outlined text-[20px]">mail</span>
+                </div>
+                <div class="flex-1">
+                    <h4 class="text-sm font-black text-gray-900 mb-0.5">Realizar Reporte de Laboratorio</h4>
+                    <p class="text-[0.65rem] font-bold text-gray-400 mb-2">Lunes 12 de Enero de 2026</p>
+                    <div class="flex gap-2">
+                        <span class="px-2 py-0.5 bg-gray-100 text-gray-500 text-[0.6rem] font-bold rounded-full border border-gray-200">#Escuela</span>
+                        <span class="px-2 py-0.5 bg-gray-100 text-gray-500 text-[0.6rem] font-bold rounded-full border border-gray-200">#Investigación</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="px-3 py-1 bg-red-50 text-red-500 text-[0.65rem] font-black rounded-full border border-red-100 whitespace-nowrap">Prioridad Alta</span>
+                    <button class="w-8 h-8 rounded-full bg-gray-800 text-white flex items-center justify-center hover:bg-gray-700 transition-colors">
+                        <span class="material-symbols-outlined text-[16px]">check</span>
+                    </button>
+                    <button class="w-8 h-8 rounded-full bg-gray-50 text-yellow-500 border border-gray-200 flex items-center justify-center hover:bg-gray-100 transition-colors">
+                        <span class="material-symbols-outlined text-[14px]">edit</span>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+</div>
+
+
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+        
+        <div class="absolute inset-0 bg-gray-900/40 backdrop-blur-sm"></div>
+
+        <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-2xl flex flex-col overflow-hidden">
+            
+            <div class="flex justify-between items-center p-6 sm:px-8 border-b border-gray-100">
+                <div class="flex items-center gap-2 text-gray-900">
+                    <span class="material-symbols-outlined text-primary font-bold text-[24px]">add</span>
+                    <h2 class="text-xl font-black">Añadir Tarea</h2>
+                </div>
+                
+                <div class="flex items-center gap-3 bg-gray-50 px-3 py-1.5 rounded-full border border-gray-200">
+                    <span class="text-[0.65rem] font-bold text-gray-500 uppercase tracking-wider">Utilizar IA</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" class="sr-only peer">
+                        <div class="w-8 h-4 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-primary"></div>
+                    </label>
+                    <span class="material-symbols-outlined text-gray-400 text-[18px]">smart_toy</span>
+                </div>
+            </div>
+
+            <div class="p-6 sm:p-8 space-y-6 overflow-y-auto">
+                
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Nombre</label>
+                    <input type="text" placeholder="Nombre de la actividad o tarea" class="w-full px-4 py-3 bg-white border-2 border-primary/20 rounded-xl text-sm font-medium text-gray-900 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors placeholder-gray-400">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Descripción</label>
+                    <textarea placeholder="Añadir una descripcion" class="w-full h-24 px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm font-medium text-gray-900 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors placeholder-gray-400 resize-none"></textarea>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Día Fecha & Hora</label>
+                        <div class="border border-gray-200 rounded-xl p-4 flex flex-col gap-3 hover:border-gray-300 transition-colors cursor-pointer">
+                            <div class="flex justify-between items-center">
+                                <span class="font-black text-gray-900">Jueves</span>
+                                <span class="text-xs font-bold text-primary">Oct 24</span>
+                            </div>
+                            <div class="flex items-center gap-1.5 text-gray-500">
+                                <span class="material-symbols-outlined text-[16px]">schedule</span>
+                                <span class="text-xs font-bold">2:00 PM</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between items-center mb-4">
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Prioridad</label>
+                            <span class="text-[0.65rem] font-bold text-primary">Bajo - Alto</span>
+                        </div>
+                        <div class="px-2 mt-6 relative">
+                            <input type="range" min="1" max="100" value="70" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary relative z-10">
+                            <div class="flex justify-between mt-2 px-1">
+                                <span class="text-[0.6rem] font-bold text-gray-400 uppercase">Bajo</span>
+                                <span class="text-[0.6rem] font-bold text-primary uppercase">Alto</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Tags</label>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <div class="flex items-center gap-1 px-3 py-1.5 bg-[#f3ebff] text-primary border border-[#e9d5ff] rounded-lg text-xs font-bold">
+                            #DesignSystem
+                            <button class="hover:text-primary-hover"><span class="material-symbols-outlined text-[14px]">close</span></button>
+                        </div>
+                        <div class="flex items-center gap-1 px-3 py-1.5 bg-blue-50 text-blue-600 border border-blue-100 rounded-lg text-xs font-bold">
+                            #Q4Goals
+                            <button class="hover:text-blue-800"><span class="material-symbols-outlined text-[14px]">close</span></button>
+                        </div>
+                        <button class="flex items-center gap-1 px-3 py-1.5 bg-white border border-gray-200 text-gray-500 hover:text-gray-800 hover:bg-gray-50 rounded-lg text-xs font-bold transition-colors">
+                            <span class="material-symbols-outlined text-[14px]">add</span>
+                            Agregar Tag
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="flex justify-between items-center p-6 bg-gray-50/50 border-t border-gray-100 rounded-b-3xl">
+                <button class="text-sm font-bold text-gray-500 hover:text-gray-800 transition-colors">
+                    Cancelar
+                </button>
+                <button class="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-xl text-sm font-bold hover:bg-primary-hover shadow-md transition-all">
+                    <span class="material-symbols-outlined text-[18px]">add_circle</span>
+                    Añadir
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+        
+        <div class="absolute inset-0 bg-gray-900/40 backdrop-blur-sm"></div>
+
+        <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-2xl flex flex-col overflow-hidden">
+            
+            <div class="flex justify-between items-center p-6 sm:px-8 border-b border-gray-100">
+                <div class="flex items-center gap-2 text-gray-900">
+                    <span class="material-symbols-outlined text-primary font-bold text-[24px]">edit_square</span>
+                    <h2 class="text-xl font-black">Actualizar Tarea</h2>
+                </div>
+                
+                <div class="flex items-center gap-3 bg-gray-50 px-3 py-1.5 rounded-full border border-gray-200">
+                    <span class="text-[0.65rem] font-bold text-gray-500 uppercase tracking-wider">Utilizar IA</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" class="sr-only peer" checked>
+                        <div class="w-8 h-4 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-primary"></div>
+                    </label>
+                    <span class="material-symbols-outlined text-primary text-[18px]">smart_toy</span>
+                </div>
+            </div>
+
+            <div class="p-6 sm:p-8 space-y-6 overflow-y-auto">
+                
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Nombre</label>
+                    <input type="text" value="Realizar Reporte de Laboratorio" class="w-full px-4 py-3 bg-white border-2 border-primary/20 rounded-xl text-sm font-bold text-gray-900 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Descripción</label>
+                    <textarea class="w-full h-24 px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm font-medium text-gray-900 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors resize-none">Investigar las fuentes secundarias y armar el formato APA para la entrega final del proyecto.</textarea>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Día Fecha & Hora</label>
+                        <div class="border border-gray-200 rounded-xl p-4 flex flex-col gap-3 hover:border-gray-300 transition-colors cursor-pointer bg-gray-50">
+                            <div class="flex justify-between items-center">
+                                <span class="font-black text-gray-900">Lunes</span>
+                                <span class="text-xs font-bold text-primary">Ene 12</span>
+                            </div>
+                            <div class="flex items-center gap-1.5 text-gray-500">
+                                <span class="material-symbols-outlined text-[16px]">schedule</span>
+                                <span class="text-xs font-bold">10:00 AM</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between items-center mb-4">
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Prioridad</label>
+                            <span class="text-[0.65rem] font-bold text-red-500">Alta</span>
+                        </div>
+                        <div class="px-2 mt-6 relative">
+                            <input type="range" min="1" max="100" value="90" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-red-500 relative z-10">
+                            <div class="flex justify-between mt-2 px-1">
+                                <span class="text-[0.6rem] font-bold text-gray-400 uppercase">Bajo</span>
+                                <span class="text-[0.6rem] font-bold text-red-500 uppercase">Alto</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Tags</label>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <div class="flex items-center gap-1 px-3 py-1.5 bg-gray-100 text-gray-600 border border-gray-200 rounded-lg text-xs font-bold">
+                            #Escuela
+                            <button class="hover:text-red-500"><span class="material-symbols-outlined text-[14px]">close</span></button>
+                        </div>
+                        <div class="flex items-center gap-1 px-3 py-1.5 bg-gray-100 text-gray-600 border border-gray-200 rounded-lg text-xs font-bold">
+                            #Investigación
+                            <button class="hover:text-red-500"><span class="material-symbols-outlined text-[14px]">close</span></button>
+                        </div>
+                        <button class="flex items-center gap-1 px-3 py-1.5 bg-white border border-gray-200 text-gray-500 hover:text-gray-800 hover:bg-gray-50 rounded-lg text-xs font-bold transition-colors">
+                            <span class="material-symbols-outlined text-[14px]">add</span>
+                            Agregar Tag
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="flex justify-between items-center p-6 bg-gray-50/50 border-t border-gray-100 rounded-b-3xl">
+                <button class="flex items-center gap-1 text-sm font-bold text-red-500 hover:text-red-700 transition-colors">
+                    <span class="material-symbols-outlined text-[18px]">delete</span>
+                    Eliminar Tarea
+                </button>
+                
+                <div class="flex gap-3">
+                    <button class="text-sm font-bold text-gray-500 hover:text-gray-800 transition-colors px-4">
+                        Cancelar
+                    </button>
+                    <button class="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-xl text-sm font-bold hover:bg-primary-hover shadow-md transition-all">
+                        <span class="material-symbols-outlined text-[18px]">update</span>
+                        Actualizar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 hidden" id="modal-eliminar">
+        
+        <div class="absolute inset-0 bg-gray-900/40 backdrop-blur-sm"></div>
+
+        <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-md p-6 sm:p-8 flex flex-col gap-6 animate-fade-in-up">
+            
+            <button class="absolute top-6 right-6 text-gray-400 hover:text-gray-600 transition-colors">
+                <span class="material-symbols-outlined text-[20px]">close</span>
+            </button>
+
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center flex-shrink-0">
+                    <span class="material-symbols-outlined text-red-500 text-[22px]">warning</span>
+                </div>
+                <h2 class="text-xl font-black text-gray-900">¿Eliminar tarea?</h2>
+            </div>
+
+            <p class="text-sm font-medium text-gray-500 leading-relaxed">
+                ¿Estás seguro de que quieres eliminar esta tarea? Esta acción no se puede deshacer.
+            </p>
+
+            <div class="border border-gray-100 bg-gray-50 rounded-xl p-4 flex gap-3 items-start">
+                <div class="mt-0.5">
+                    <span class="material-symbols-outlined text-gray-400 text-[18px]">check_circle</span>
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold text-gray-900 mb-1">Finalizar Guía de Marca</h4>
+                    <div class="flex items-center gap-2">
+                        <span class="px-2 py-0.5 bg-[#f3ebff] text-primary text-[0.65rem] font-bold rounded-full">Alta Prioridad</span>
+                        <span class="text-gray-300 text-[10px]">•</span>
+                        <span class="text-xs font-medium text-gray-500">Vence mañana</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-end items-center gap-3 pt-2">
+                <button class="px-5 py-2.5 border border-gray-200 text-gray-600 rounded-xl text-sm font-bold hover:bg-gray-50 transition-colors">
+                    Cancelar
+                </button>
+                <button class="px-6 py-2.5 bg-red-500 text-white rounded-xl text-sm font-bold hover:bg-red-600 shadow-md shadow-red-500/20 transition-all">
+                    Eliminar Tarea
+                </button>
+            </div>
+            
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>{% block title %}Inicio{% endblock %} - Priority Pulse</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: { primary: '#6e00ff', 'primary-hover': '#5a00d1' }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-sans bg-[#fcfaff] text-gray-900 antialiased min-h-screen flex flex-col relative z-0">
+    
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[80%] max-w-4xl h-[400px] bg-[#d9baff]/40 blur-[100px] rounded-full pointer-events-none -z-10"></div>
+
+    <header class="w-full px-6 py-4 flex items-center justify-between z-20 sticky top-0 bg-[#fcfaff]/80 backdrop-blur-md border-b border-gray-100/50">
+        
+        <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-[28px] text-primary font-bold">ecg_heart</span>
+            <span class="text-xl font-black tracking-tight text-gray-900">Priority Pulse</span>
+        </div>
+
+        <nav class="hidden md:flex items-center bg-white rounded-full p-1 shadow-sm border border-gray-200">
+            <a href="/inicio" class="px-5 py-1.5 bg-gray-100 rounded-full text-sm font-bold text-gray-900 transition-colors">Inicio</a>
+            <a href="#" class="px-5 py-1.5 text-sm font-bold text-gray-500 hover:text-gray-900 transition-colors">Rutinas</a>
+            <a href="#" class="px-5 py-1.5 text-sm font-bold text-gray-500 hover:text-gray-900 transition-colors">Clasificación</a>
+        </nav>
+
+        <div class="flex items-center gap-6">
+            <button class="text-gray-400 hover:text-gray-600 transition-colors relative">
+                <span class="material-symbols-outlined text-[24px]">notifications</span>
+                <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full border-2 border-[#fcfaff]"></span>
+            </button>
+            
+            <div class="hidden sm:flex flex-col items-end gap-1 border-r border-gray-200 pr-6">
+                <div class="flex items-center gap-1">
+                    <span class="text-xs font-black text-primary">7 Días de Racha</span>
+                    <span class="text-primary text-sm">🔥</span>
+                </div>
+                <div class="w-24 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                    <div class="w-3/4 h-full bg-primary rounded-full"></div>
+                </div>
+            </div>
+
+            <button class="w-10 h-10 rounded-full border-2 border-white shadow-sm overflow-hidden focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
+                <img src="https://i.pravatar.cc/150?img=5" alt="Perfil" class="w-full h-full object-cover">
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 z-10">
+        {% block content %}{% endblock %}
+    </main>
+
+    <div class="fixed inset-0 z-[100] hidden" id="drawer-notificaciones">
+        
+        <div class="absolute inset-0 bg-gray-900/20 backdrop-blur-sm transition-opacity"></div>
+
+        <div class="absolute right-0 top-0 h-full w-full max-w-sm bg-white shadow-2xl flex flex-col transform transition-transform duration-300">
+            
+            <div class="flex items-center justify-between p-5 border-b border-gray-100">
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-primary font-bold text-[22px]">notifications_active</span>
+                    <h2 class="text-lg font-black text-gray-900">Notificaciones</h2>
+                    <span class="px-2 py-0.5 bg-[#f3ebff] text-primary text-[0.65rem] font-bold rounded-full">3 nuevas</span>
+                </div>
+                <button class="text-gray-400 hover:text-gray-600 transition-colors rounded-full hover:bg-gray-100 p-1">
+                    <span class="material-symbols-outlined text-[20px]">close</span>
+                </button>
+            </div>
+
+            <div class="flex gap-4 px-5 border-b border-gray-100 mt-2">
+                <button class="pb-3 border-b-2 border-primary text-primary text-xs font-bold transition-colors">Todas</button>
+                <button class="pb-3 border-b-2 border-transparent text-gray-500 hover:text-gray-800 text-xs font-bold transition-colors flex items-center gap-1">
+                    Sistema <span class="w-4 h-4 rounded-full bg-red-100 text-red-500 text-[9px] flex items-center justify-center font-black">1</span>
+                </button>
+                <button class="pb-3 border-b-2 border-transparent text-gray-500 hover:text-gray-800 text-xs font-bold transition-colors">Social</button>
+                <button class="pb-3 border-b-2 border-transparent text-gray-500 hover:text-gray-800 text-xs font-bold transition-colors">Logros</button>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-5 space-y-6 custom-scrollbar">
+                
+                <div>
+                    <h3 class="text-[0.65rem] font-bold text-gray-400 uppercase tracking-widest mb-4">Hoy</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="flex gap-3 items-start relative">
+                            <div class="absolute -left-2 top-2 w-1.5 h-1.5 bg-primary rounded-full"></div>
+                            
+                            <div class="w-10 h-10 rounded-full bg-orange-50 text-orange-500 flex items-center justify-center shrink-0 border border-orange-100">
+                                <span class="material-symbols-outlined text-[20px]">warning</span>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex justify-between items-start mb-0.5">
+                                    <h4 class="text-sm font-bold text-gray-900 leading-tight">¡Racha en peligro!</h4>
+                                    <span class="text-[0.65rem] font-medium text-gray-400">hace 2h</span>
+                                </div>
+                                <p class="text-[0.75rem] font-medium text-gray-500 leading-snug mb-2">No has registrado ninguna tarea hoy. ¡Mantén tu racha ahora!</p>
+                                <button class="px-3 py-1.5 bg-primary text-white text-xs font-bold rounded-lg shadow-sm shadow-primary/20 hover:bg-primary-hover transition-colors">
+                                    Registrar tarea
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-3 items-start">
+                            <div class="w-10 h-10 rounded-full bg-pink-50 text-pink-500 flex items-center justify-center shrink-0 border border-pink-100">
+                                <span class="material-symbols-outlined text-[18px]">favorite</span>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex justify-between items-start">
+                                    <h4 class="text-sm font-bold text-gray-900 leading-tight">A <span class="font-black text-primary">User123</span> le gustó tu perfil</h4>
+                                    <span class="text-[0.65rem] font-medium text-gray-400">hace 4h</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-3 items-start p-3 bg-[#fcfaff] border border-[#e9d5ff] rounded-2xl relative">
+                            <div class="absolute -left-1 top-2 w-1.5 h-1.5 bg-primary rounded-full"></div>
+
+                            <div class="w-10 h-10 rounded-full bg-yellow-50 text-yellow-500 flex items-center justify-center shrink-0 border border-yellow-100">
+                                <span class="material-symbols-outlined text-[20px]">emoji_events</span>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex justify-between items-start mb-0.5">
+                                    <h4 class="text-sm font-black text-gray-900 leading-tight">¡Nuevo logro desbloqueado!</h4>
+                                    <span class="text-[0.65rem] font-medium text-gray-400">hace 5h</span>
+                                </div>
+                                <p class="text-[0.75rem] font-medium text-gray-500 leading-snug mb-2">Completaste 50 tareas esta semana</p>
+                                <button class="px-3 py-1.5 bg-white border border-gray-200 text-gray-700 text-xs font-bold rounded-lg shadow-sm hover:bg-gray-50 transition-colors">
+                                    Ver logro
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-[0.65rem] font-bold text-gray-400 uppercase tracking-widest mb-4">Ayer</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="flex gap-3 items-start p-3 bg-gray-50 border border-gray-100 rounded-2xl">
+                            <div class="w-10 h-10 rounded-full bg-yellow-50 text-yellow-500 flex items-center justify-center shrink-0 border border-yellow-100">
+                                <span class="material-symbols-outlined text-[20px]">emoji_events</span>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex justify-between items-start mb-0.5">
+                                    <h4 class="text-sm font-black text-gray-900 leading-tight">¡Nuevo logro desbloqueado!</h4>
+                                    <span class="text-[0.65rem] font-medium text-gray-400">ayer</span>
+                                </div>
+                                <p class="text-[0.75rem] font-medium text-gray-500 leading-snug mb-2">Completaste 50 tareas esta semana</p>
+                                <button class="px-3 py-1.5 bg-white border border-gray-200 text-gray-700 text-xs font-bold rounded-lg shadow-sm hover:bg-gray-50 transition-colors">
+                                    Ver logro
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="p-4 border-t border-gray-100 bg-gray-50/50 mt-auto">
+                <button class="w-full flex items-center justify-center gap-2 text-[0.75rem] font-bold text-gray-500 hover:text-gray-800 transition-colors py-2">
+                    <span class="material-symbols-outlined text-[16px]">settings</span>
+                    Ajustes de notificaciones
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

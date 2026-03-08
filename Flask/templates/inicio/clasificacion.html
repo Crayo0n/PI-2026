@@ -1,0 +1,225 @@
+{% extends "layouts/app.html" %}
+
+{% block title %}Clasificación Global{% endblock %}
+
+{% block content %}
+<div class="flex flex-col lg:flex-row gap-8 relative z-10">
+    
+    <div class="flex-1 space-y-10">
+        
+        <div>
+            <h1 class="text-4xl font-black text-gray-900 tracking-tight">Clasificación Global</h1>
+            <p class="text-lg font-medium text-gray-500 mt-1">Mira tu posición frente a la comunidad global</p>
+        </div>
+
+        <div class="flex justify-center items-end gap-4 sm:gap-8 pt-8 pb-4">
+            
+            <div class="flex flex-col items-center animate-fade-in-up" style="animation-delay: 100ms;">
+                <div class="relative">
+                    <div class="w-20 h-20 rounded-full border-4 border-white shadow-[0_0_20px_rgba(110,0,255,0.15)] overflow-hidden bg-gray-100 z-10 relative">
+                        <img src="https://i.pravatar.cc/150?img=32" alt="2do Lugar" class="w-full h-full object-cover">
+                    </div>
+                    <div class="absolute -bottom-3 left-1/2 -translate-x-1/2 w-6 h-6 bg-gray-300 rounded-full border-2 border-white flex items-center justify-center shadow-sm z-20">
+                        <span class="text-[10px] font-black text-gray-700">2</span>
+                    </div>
+                </div>
+                <h3 class="mt-4 text-base font-black text-gray-900">Alex Smith</h3>
+                <span class="text-sm font-bold text-primary">22,100 XP</span>
+            </div>
+
+            <div class="flex flex-col items-center mb-6 animate-fade-in-up">
+                <div class="relative">
+                    <div class="absolute -top-8 left-1/2 -translate-x-1/2 z-30">
+                        <span class="text-3xl filter drop-shadow-md">👑</span>
+                    </div>
+                    <div class="w-28 h-28 rounded-full border-4 border-white shadow-[0_0_30px_rgba(110,0,255,0.3)] overflow-hidden bg-gray-100 z-10 relative">
+                        <img src="https://i.pravatar.cc/150?img=11" alt="1er Lugar" class="w-full h-full object-cover">
+                    </div>
+                    <div class="absolute -bottom-3 left-1/2 -translate-x-1/2 w-8 h-8 bg-yellow-400 rounded-full border-2 border-white flex items-center justify-center shadow-md z-20">
+                        <span class="text-xs font-black text-yellow-900">1</span>
+                    </div>
+                </div>
+                <h3 class="mt-5 text-xl font-black text-gray-900">Jane Doe</h3>
+                <span class="text-base font-black text-primary">24,500 XP</span>
+            </div>
+
+            <div class="flex flex-col items-center animate-fade-in-up" style="animation-delay: 200ms;">
+                <div class="relative">
+                    <div class="w-20 h-20 rounded-full border-4 border-white shadow-[0_0_20px_rgba(110,0,255,0.15)] overflow-hidden bg-gray-100 z-10 relative">
+                        <img src="https://i.pravatar.cc/150?img=44" alt="3er Lugar" class="w-full h-full object-cover">
+                    </div>
+                    <div class="absolute -bottom-3 left-1/2 -translate-x-1/2 w-6 h-6 bg-orange-300 rounded-full border-2 border-white flex items-center justify-center shadow-sm z-20">
+                        <span class="text-[10px] font-black text-orange-900">3</span>
+                    </div>
+                </div>
+                <h3 class="mt-4 text-base font-black text-gray-900">Sarah Lee</h3>
+                <span class="text-sm font-bold text-primary">20,850 XP</span>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse min-w-[600px]">
+                    <thead>
+                        <tr class="text-[0.7rem] font-bold text-gray-400 uppercase tracking-widest border-b border-gray-100 bg-white">
+                            <th class="p-5 w-20 text-center">Rango</th>
+                            <th class="p-5">Usuario</th>
+                            <th class="p-5 text-center">Puntaje Pulse</th>
+                            <th class="p-5 text-center">Racha</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm font-medium text-gray-700">
+                        
+                        <tr class="border-b border-gray-50 hover:bg-gray-50 transition-colors">
+                            <td class="p-4 text-center text-gray-500 font-bold">4</td>
+                            <td class="p-4 flex items-center gap-3">
+                                <img src="https://i.pravatar.cc/150?img=33" class="w-8 h-8 rounded-full bg-gray-200">
+                                <span class="font-bold text-gray-900">Michael Chen</span>
+                            </td>
+                            <td class="p-4 text-center font-black text-primary">19,200 XP</td>
+                            <td class="p-4 text-center">
+                                <span class="inline-flex items-center gap-1 bg-orange-50 text-orange-600 px-2 py-1 rounded-md text-[0.65rem] font-bold border border-orange-100">
+                                    <span class="material-symbols-outlined text-[12px]">local_fire_department</span> 12 Días
+                                </span>
+                            </td>
+                        </tr>
+
+                        <tr class="border-b border-gray-50 hover:bg-gray-50 transition-colors">
+                            <td class="p-4 text-center text-gray-500 font-bold">5</td>
+                            <td class="p-4 flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-gray-200"></div>
+                                <span class="font-bold text-gray-900">Emily R.</span>
+                            </td>
+                            <td class="p-4 text-center font-black text-primary">18,900 XP</td>
+                            <td class="p-4 text-center">
+                                <span class="inline-flex items-center gap-1 bg-orange-50 text-orange-600 px-2 py-1 rounded-md text-[0.65rem] font-bold border border-orange-100">
+                                    <span class="material-symbols-outlined text-[12px]">local_fire_department</span> 8 Días
+                                </span>
+                            </td>
+                        </tr>
+
+                        <tr class="border-b border-gray-50 hover:bg-gray-50 transition-colors">
+                            <td class="p-4 text-center text-gray-500 font-bold">6</td>
+                            <td class="p-4 flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-gray-200"></div>
+                                <span class="font-bold text-gray-900">David K.</span>
+                            </td>
+                            <td class="p-4 text-center font-black text-primary">18,500 XP</td>
+                            <td class="p-4 text-center">
+                                <span class="inline-flex items-center gap-1 bg-orange-50 text-orange-600 px-2 py-1 rounded-md text-[0.65rem] font-bold border border-orange-100">
+                                    <span class="material-symbols-outlined text-[12px]">local_fire_department</span> 5 Días
+                                </span>
+                            </td>
+                        </tr>
+
+                        <tr class="border-b border-gray-50 hover:bg-gray-50 transition-colors">
+                            <td class="p-4 text-center text-gray-500 font-bold">7</td>
+                            <td class="p-4 flex items-center gap-3">
+                                <img src="https://i.pravatar.cc/150?img=60" class="w-8 h-8 rounded-full bg-gray-200">
+                                <span class="font-bold text-gray-900">Liam Johnson</span>
+                            </td>
+                            <td class="p-4 text-center font-black text-primary">17,240 XP</td>
+                            <td class="p-4 text-center">
+                                <span class="inline-flex items-center gap-1 bg-gray-100 text-gray-500 px-2 py-1 rounded-md text-[0.65rem] font-bold border border-gray-200">
+                                    <span class="material-symbols-outlined text-[12px]">local_fire_department</span> 2 Días
+                                </span>
+                            </td>
+                        </tr>
+
+                        <tr class="bg-[#f3ebff] border-y border-[#d9baff] shadow-[0_0_15px_rgba(110,0,255,0.05)] relative z-10">
+                            <td class="p-4 text-center text-2xl font-black text-primary">42</td>
+                            <td class="p-4 flex items-center gap-3">
+                                <div class="relative">
+                                    <img src="https://i.pravatar.cc/150?img=5" class="w-10 h-10 rounded-full border-2 border-primary">
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="font-black text-gray-900 text-base">Tú</span>
+                                    <span class="text-[0.6rem] font-bold text-primary">Top 5% Global</span>
+                                </div>
+                            </td>
+                            <td class="p-4 text-center font-black text-primary text-lg">12,450 XP</td>
+                            <td class="p-4 text-center">
+                                <span class="inline-flex items-center gap-1 bg-primary text-white px-3 py-1.5 rounded-md text-xs font-bold shadow-md shadow-primary/20">
+                                    <span class="material-symbols-outlined text-[14px]">local_fire_department</span> 15 Días
+                                </span>
+                            </td>
+                        </tr>
+
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="p-4 text-center text-gray-500 font-bold">43</td>
+                            <td class="p-4 flex items-center gap-3">
+                                <img src="https://i.pravatar.cc/150?img=47" class="w-8 h-8 rounded-full bg-gray-200">
+                                <span class="font-bold text-gray-900">Sofia M.</span>
+                            </td>
+                            <td class="p-4 text-center font-black text-primary">12,100 XP</td>
+                            <td class="p-4 text-center">
+                                <span class="inline-flex items-center gap-1 bg-gray-100 text-gray-500 px-2 py-1 rounded-md text-[0.65rem] font-bold border border-gray-200">
+                                    <span class="material-symbols-outlined text-[12px]">local_fire_department</span> 1 Día
+                                </span>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="w-full lg:w-[320px] shrink-0 space-y-4">
+        
+        <div class="flex justify-between items-center mb-6 px-1">
+            <h3 class="text-lg font-black text-gray-900 flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary text-[22px]">psychology</span>
+                Consejos de la IA
+            </h3>
+            <button class="text-primary hover:text-primary-hover transition-transform hover:rotate-180 duration-300">
+                <span class="material-symbols-outlined text-[20px]">refresh</span>
+            </button>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex gap-4 relative overflow-hidden group hover:border-primary/30 transition-colors">
+            <span class="material-symbols-outlined absolute -right-2 -top-2 text-5xl text-gray-50 opacity-50 transform rotate-12 group-hover:text-primary/5 transition-colors">electric_bolt</span>
+            
+            <div class="w-10 h-10 rounded-xl bg-[#f3ebff] text-primary flex items-center justify-center shrink-0 z-10">
+                <span class="material-symbols-outlined text-[20px]">timer</span>
+            </div>
+            <div class="z-10">
+                <p class="text-sm font-bold text-gray-800 leading-snug mb-1">
+                    Completa 3 tareas antes de las 10 AM para <span class="text-primary">+50 XP extra</span>.
+                </p>
+                <span class="text-[0.65rem] font-semibold text-gray-400 uppercase tracking-wide">Sugerencia de rutina</span>
+            </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex gap-4 relative overflow-hidden group hover:border-orange-300 transition-colors">
+            <span class="material-symbols-outlined absolute -right-2 -top-2 text-5xl text-gray-50 opacity-50 transform rotate-12 group-hover:text-orange-500/5 transition-colors">trending_up</span>
+            
+            <div class="w-10 h-10 rounded-xl bg-orange-50 text-orange-500 flex items-center justify-center shrink-0 z-10">
+                <span class="material-symbols-outlined text-[20px]">social_leaderboard</span>
+            </div>
+            <div class="z-10">
+                <p class="text-sm font-bold text-gray-800 leading-snug mb-1">
+                    Tu racha está a punto de superar a <span class="text-gray-900 font-black">Alex Smith</span>.
+                </p>
+                <span class="text-[0.65rem] font-semibold text-gray-400 uppercase tracking-wide">Oportunidad competitiva</span>
+            </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex gap-4 relative overflow-hidden group hover:border-blue-300 transition-colors">
+            <span class="material-symbols-outlined absolute -right-2 -top-2 text-5xl text-gray-50 opacity-50 transform rotate-12 group-hover:text-blue-500/5 transition-colors">auto_awesome</span>
+            
+            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-500 flex items-center justify-center shrink-0 z-10">
+                <span class="material-symbols-outlined text-[20px]">light_mode</span>
+            </div>
+            <div class="z-10">
+                <p class="text-sm font-bold text-gray-800 leading-snug mb-1">
+                    Organiza tu mañana con una rutina para maximizar tu <span class="text-primary font-black">Pulso</span>.
+                </p>
+                <span class="text-[0.65rem] font-semibold text-gray-400 uppercase tracking-wide">Optimización</span>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}
