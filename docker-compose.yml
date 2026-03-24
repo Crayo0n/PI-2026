@@ -28,6 +28,45 @@ services:
     networks:
       - priority_pulse_net
 
+  api:
+    build: ./FastAPI
+    container_name: ServerFastAPI
+    ports:
+      # Asignamos a FastAPI el puerto 8080 de tu equipo para que no choque con Laravel (8000) ni Flask (5000)
+      - "8080:8000"
+    volumes:
+      - ./FastAPI:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://admin:123456@postgres:5432/DB_miapi
+    networks:
+      - priority_pulse_net
+
+  postgres:
+    image: postgres:15
+    container_name: ServerPostgreSql
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: DB_miapi
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d DB_miapi"]
+      interval: 5s
+      retries: 5
+      timeout: 5s
+    networks:
+      - priority_pulse_net
+
 networks:
   priority_pulse_net:
     driver: bridge
+
+volumes:
+  postgres_data:
