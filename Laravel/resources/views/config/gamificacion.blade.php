@@ -62,88 +62,33 @@
                         </div>
                     </div>
 
-                    <div class="space-y-4">
-                        <div class="flex flex-col sm:flex-row sm:items-center gap-4 p-4 hover:bg-gray-50 rounded-xl transition-colors">
-                            <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center font-bold text-gray-500 text-sm flex-shrink-0">Lvl 1</div>
+                    <div id="lista-niveles" class="space-y-4">
+                        @forelse($niveles as $nivel)
+                        <div id="nivel-row-{{ $nivel['id'] }}" class="flex flex-col sm:flex-row sm:items-center gap-4 p-4 hover:bg-gray-50 rounded-xl transition-colors group">
+                            <div class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-white text-sm flex-shrink-0"
+                                 style="background-color: {{ $nivel['color_hex'] ?? '#6e00ff' }}">
+                                {{ $nivel['numero_nivel'] }}
+                            </div>
                             <div class="flex-1">
-                                <h4 class="text-gray-900 font-bold text-sm">Novato</h4>
-                                <p class="text-xs text-gray-500">Nivel inicial para nuevos usuarios.</p>
+                                <h4 class="text-gray-900 font-bold text-sm">{{ $nivel['nombre'] }}</h4>
+                                <p class="text-xs text-gray-500">{{ number_format($nivel['xp_requerida']) }} XP requerida</p>
                             </div>
-                            <div class="flex items-center gap-3">
-                                <div class="relative w-24">
-                                    <span class="absolute left-3 top-2.5 text-xs font-bold text-gray-400">XP</span>
-                                    <input type="text" value="0" class="w-full pl-9 pr-3 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-900 focus:outline-none focus:border-[#6e00ff] focus:ring-1 focus:ring-[#6e00ff]">
-                                </div>
-                                <span class="text-sm text-gray-400 font-medium">a</span>
-                                <div class="relative w-24">
-                                    <span class="absolute left-3 top-2.5 text-xs font-bold text-gray-400">XP</span>
-                                    <input type="text" value="999" class="w-full pl-9 pr-3 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-900 focus:outline-none focus:border-[#6e00ff] focus:ring-1 focus:ring-[#6e00ff]">
-                                </div>
-                            </div>
+                            <span class="text-xs text-gray-400 font-mono">{{ $nivel['color_hex'] ?? '—' }}</span>
+                            <button onclick="eliminarNivel({{ $nivel['id'] }}, this)"
+                                class="opacity-0 group-hover:opacity-100 transition text-gray-300 hover:text-red-500 flex-shrink-0"
+                                title="Eliminar nivel">
+                                <span class="material-symbols-outlined text-[20px]">delete</span>
+                            </button>
                         </div>
-
-                        <div class="flex flex-col sm:flex-row sm:items-center gap-4 p-4 hover:bg-gray-50 rounded-xl transition-colors">
-                            <div class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center font-bold text-blue-500 text-sm flex-shrink-0">Lvl 5</div>
-                            <div class="flex-1">
-                                <h4 class="text-gray-900 font-bold text-sm">Aprendiz</h4>
-                                <p class="text-xs text-gray-500">Usuario activo con participación regular.</p>
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <div class="relative w-24">
-                                    <span class="absolute left-3 top-2.5 text-xs font-bold text-gray-400">XP</span>
-                                    <input type="text" value="1000" class="w-full pl-9 pr-3 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-900 focus:outline-none focus:border-[#6e00ff] focus:ring-1 focus:ring-[#6e00ff]">
-                                </div>
-                                <span class="text-sm text-gray-400 font-medium">a</span>
-                                <div class="relative w-24">
-                                    <span class="absolute left-3 top-2.5 text-xs font-bold text-gray-400">XP</span>
-                                    <input type="text" value="4999" class="w-full pl-9 pr-3 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-900 focus:outline-none focus:border-[#6e00ff] focus:ring-1 focus:ring-[#6e00ff]">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="flex flex-col sm:flex-row sm:items-center gap-4 p-4 hover:bg-gray-50 rounded-xl transition-colors">
-                            <div class="w-12 h-12 bg-purple-50 rounded-full flex items-center justify-center font-bold text-purple-600 text-sm flex-shrink-0">Lvl 10</div>
-                            <div class="flex-1">
-                                <h4 class="text-gray-900 font-bold text-sm">Experto</h4>
-                                <p class="text-xs text-gray-500">Usuario avanzado con privilegios de moderación.</p>
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <div class="relative w-24">
-                                    <span class="absolute left-3 top-2.5 text-xs font-bold text-gray-400">XP</span>
-                                    <input type="text" value="5000" class="w-full pl-9 pr-3 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-900 focus:outline-none focus:border-[#6e00ff] focus:ring-1 focus:ring-[#6e00ff]">
-                                </div>
-                                <span class="text-sm text-gray-400 font-medium">a</span>
-                                <div class="relative w-24">
-                                    <span class="absolute left-3 top-2.5 text-xs font-bold text-gray-400">XP</span>
-                                    <input type="text" value="9999" class="w-full pl-9 pr-3 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-900 focus:outline-none focus:border-[#6e00ff] focus:ring-1 focus:ring-[#6e00ff]">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="flex flex-col sm:flex-row sm:items-center gap-4 p-4 hover:bg-gray-50 rounded-xl transition-colors">
-                            <div class="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center font-bold text-orange-500 text-sm flex-shrink-0">Lvl 20</div>
-                            <div class="flex-1">
-                                <h4 class="text-gray-900 font-bold text-sm">Maestro</h4>
-                                <p class="text-xs text-gray-500">Nivel máximo, acceso a beta features.</p>
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <div class="relative w-24">
-                                    <span class="absolute left-3 top-2.5 text-xs font-bold text-gray-400">XP</span>
-                                    <input type="text" value="10000" class="w-full pl-9 pr-3 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-900 focus:outline-none focus:border-[#6e00ff] focus:ring-1 focus:ring-[#6e00ff]">
-                                </div>
-                                <span class="text-sm text-gray-400 font-medium">a</span>
-                                <div class="relative w-24">
-                                    <span class="absolute left-3 top-2.5 text-xs font-bold text-gray-400">XP</span>
-                                    <input type="text" value="∞" class="w-full pl-9 pr-3 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-900 focus:outline-none focus:border-[#6e00ff] focus:ring-1 focus:ring-[#6e00ff]" disabled>
-                                </div>
-                            </div>
-                        </div>
+                        @empty
+                        <p class="text-sm text-gray-400 italic py-4 text-center">No hay niveles creados todavía.</p>
+                        @endforelse
+                    </div>
 
                         <button type="button" onclick="openModal('nivel-modal')" class="w-full py-4 mt-2 border-2 border-dashed border-[#d9baff] rounded-xl text-[#6e00ff] font-bold text-sm hover:bg-[#f3ebff] transition flex items-center justify-center gap-2">
                             <span class="material-symbols-outlined text-[18px]">add</span>
                             Añadir Nuevo Nivel
                         </button>
-                    </div>
                 </div>
 
                 <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
@@ -186,49 +131,30 @@
                         </button>
                     </div>
 
-                    <div class="space-y-4">
-                        <div class="flex items-start justify-between p-4 bg-gray-50 border border-gray-100 rounded-xl hover:bg-white hover:border-gray-200 transition-colors">
+                    <div id="lista-medallas" class="space-y-4">
+                        @forelse($medallas as $medalla)
+                        <div id="medalla-row-{{ $medalla['id'] }}" class="flex items-start justify-between p-4 bg-gray-50 border border-gray-100 rounded-xl hover:bg-white hover:border-gray-200 transition-colors group">
                             <div class="flex gap-4">
-                                <div class="w-12 h-12 bg-yellow-50 text-yellow-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                                    <span class="material-symbols-outlined">wb_sunny</span>
+                                <div class="w-12 h-12 bg-[#f3ebff] text-[#6e00ff] rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <span class="material-symbols-outlined">{{ $medalla['icono'] ?? 'workspace_premium' }}</span>
                                 </div>
                                 <div>
-                                    <h4 class="font-bold text-gray-900 text-sm mb-0.5">Madrugador Productivo</h4>
-                                    <p class="text-xs text-[#6e00ff] font-semibold mb-3">Medalla Rara</p>
-                                    <div class="flex flex-wrap gap-2">
-                                        <span class="px-2 py-1 bg-white border border-gray-200 rounded text-[0.65rem] font-medium text-gray-600">Trigger: Completar Tarea</span>
-                                        <span class="px-2 py-1 bg-white border border-gray-200 rounded text-[0.65rem] font-medium text-gray-600">Condición: Cantidad > 10</span>
-                                        <span class="px-2 py-1 bg-white border border-gray-200 rounded text-[0.65rem] font-medium text-gray-600">Límite: Antes de 9:00 AM</span>
-                                    </div>
+                                    <h4 class="font-bold text-gray-900 text-sm mb-0.5">{{ $medalla['nombre'] }}</h4>
+                                    <p class="text-xs text-gray-500">{{ $medalla['descripcion'] ?? 'Sin descripción.' }}</p>
+                                    <p class="text-xs text-gray-400 mt-1">ID: {{ $medalla['id'] }}</p>
                                 </div>
                             </div>
-                            <div class="flex gap-2 text-gray-400">
-                                <button class="hover:text-gray-700 transition"><span class="material-symbols-outlined text-[18px]">edit</span></button>
-                                <button class="hover:text-red-500 transition"><span class="material-symbols-outlined text-[18px]">delete</span></button>
-                            </div>
+                            <button onclick="eliminarMedalla({{ $medalla['id'] }}, this)"
+                                class="opacity-0 group-hover:opacity-100 transition text-gray-300 hover:text-red-500 flex-shrink-0 ml-2"
+                                title="Eliminar medalla">
+                                <span class="material-symbols-outlined text-[20px]">delete</span>
+                            </button>
                         </div>
-
-                        <div class="flex items-start justify-between p-4 bg-gray-50 border border-gray-100 rounded-xl hover:bg-white hover:border-gray-200 transition-colors">
-                            <div class="flex gap-4">
-                                <div class="w-12 h-12 bg-blue-50 text-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                                    <span class="material-symbols-outlined">bolt</span>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold text-gray-900 text-sm mb-0.5">Imparable</h4>
-                                    <p class="text-xs text-[#6e00ff] font-semibold mb-3">Medalla Épica</p>
-                                    <div class="flex flex-wrap gap-2">
-                                        <span class="px-2 py-1 bg-white border border-gray-200 rounded text-[0.65rem] font-medium text-gray-600">Trigger: Racha Diaria</span>
-                                        <span class="px-2 py-1 bg-white border border-gray-200 rounded text-[0.65rem] font-medium text-gray-600">Condición: Días > 30</span>
-                                        <span class="px-2 py-1 bg-white border border-gray-200 rounded text-[0.65rem] font-medium text-gray-600">Sin fallos</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="flex gap-2 text-gray-400">
-                                <button class="hover:text-gray-700 transition"><span class="material-symbols-outlined text-[18px]">edit</span></button>
-                                <button class="hover:text-red-500 transition"><span class="material-symbols-outlined text-[18px]">delete</span></button>
-                            </div>
-                        </div>
+                        @empty
+                        <p class="text-sm text-gray-400 italic py-4 text-center">No hay medallas creadas todavía.</p>
+                        @endforelse
                     </div>
+
                 </div>
 
             </div>
@@ -271,23 +197,22 @@
                         <div class="space-y-4">
                             <div>
                                 <label class="block text-sm font-bold text-gray-900 mb-1.5">Nombre de la Medalla</label>
-                                <input type="text" value="Cazador de Bugs" class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-900 focus:outline-none focus:border-[#6e00ff] focus:ring-1 focus:ring-[#6e00ff] transition">
+                                <input id="insignia-nombre" type="text" placeholder="Ej: Cazador de Bugs" class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-900 focus:outline-none focus:border-[#6e00ff] focus:ring-1 focus:ring-[#6e00ff] transition">
                             </div>
 
                             <div>
                                 <label class="block text-sm font-bold text-gray-900 mb-1.5">Descripción</label>
-                                <textarea class="w-full h-20 px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-900 focus:outline-none focus:border-[#6e00ff] focus:ring-1 focus:ring-[#6e00ff] transition resize-none">Reporta y verifica 5 errores críticos en el sistema.</textarea>
-                                <p class="text-[0.65rem] text-gray-400 text-right mt-1">0/120 caracteres</p>
+                                <textarea id="insignia-descripcion" class="w-full h-20 px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-900 focus:outline-none focus:border-[#6e00ff] focus:ring-1 focus:ring-[#6e00ff] transition resize-none" placeholder="Describe cómo se gana esta medalla..."></textarea>
                             </div>
 
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label class="block text-sm font-bold text-gray-900 mb-1.5">Icono (Material Symbol)</label>
+                                    <label class="block text-sm font-bold text-gray-900 mb-1.5">Ícono (Material Symbol)</label>
                                     <div class="relative">
                                         <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                                            <span class="material-symbols-outlined text-[18px]">pest_control</span>
+                                            <span id="icono-preview" class="material-symbols-outlined text-[18px]">workspace_premium</span>
                                         </span>
-                                        <input type="text" value="pest_control" class="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-900 focus:outline-none focus:border-[#6e00ff] focus:ring-1 focus:ring-[#6e00ff] transition">
+                                        <input id="insignia-icono" type="text" value="workspace_premium" oninput="document.getElementById('icono-preview').textContent=this.value" class="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-900 focus:outline-none focus:border-[#6e00ff] focus:ring-1 focus:ring-[#6e00ff] transition">
                                     </div>
                                 </div>
                                 <div>
@@ -369,10 +294,11 @@
             </div>
 
             <div class="flex justify-end items-center gap-3 p-6 border-t border-gray-100 bg-white">
+                <div id="insignia-feedback" class="hidden mr-auto text-sm font-semibold px-4 py-2 rounded-lg"></div>
                 <button type="button" onclick="closeModal('insignia-modal')" class="px-5 py-2.5 text-sm font-bold text-gray-600 hover:bg-gray-50 rounded-lg transition">
                     Cancelar
                 </button>
-                <button class="flex items-center gap-2 px-5 py-2.5 bg-[#6e00ff] text-white rounded-lg text-sm font-bold hover:bg-[#5a00d1] shadow-md transition-all">
+                <button id="btn-guardar-insignia" onclick="guardarMedalla()" class="flex items-center gap-2 px-5 py-2.5 bg-[#6e00ff] text-white rounded-lg text-sm font-bold hover:bg-[#5a00d1] shadow-md transition-all">
                     <span class="material-symbols-outlined text-[18px]">save</span>
                     Guardar Insignia
                 </button>
@@ -414,35 +340,39 @@
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-bold text-gray-900 mb-1.5">Número del Nivel</label>
-                            <input type="text" value="Nvl 51" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 focus:outline-none focus:border-[#6e00ff] focus:ring-1 focus:ring-[#6e00ff]">
+                            <input id="nivel-numero" type="number" min="1" placeholder="Ej: 51" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 focus:outline-none focus:border-[#6e00ff] focus:ring-1 focus:ring-[#6e00ff]">
                         </div>
                         <div>
                             <label class="block text-sm font-bold text-gray-900 mb-1.5">XP Requerida</label>
                             <div class="relative">
-                                <input type="number" value="25000" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 focus:outline-none focus:border-[#6e00ff] focus:ring-1 focus:ring-[#6e00ff]">
+                                <input id="nivel-xp" type="number" min="0" placeholder="25000" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 focus:outline-none focus:border-[#6e00ff] focus:ring-1 focus:ring-[#6e00ff]">
                                 <span class="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-gray-300">XP</span>
                             </div>
                         </div>
                     </div>
 
-                    <div>
-                        <label class="block text-sm font-bold text-gray-900 mb-1.5">Título de Rango</label>
-                        <div class="relative">
-                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                                <span class="material-symbols-outlined text-[18px]">military_tech</span>
-                            </span>
-                            <input type="text" value="Maestro del Enfoque" class="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 focus:outline-none focus:border-[#6e00ff] focus:ring-1 focus:ring-[#6e00ff]">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-900 mb-1.5">Título de Rango</label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                                    <span class="material-symbols-outlined text-[18px]">military_tech</span>
+                                </span>
+                                <input id="nivel-nombre" type="text" placeholder="Ej: Maestro del Enfoque" class="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 focus:outline-none focus:border-[#6e00ff] focus:ring-1 focus:ring-[#6e00ff]">
+                            </div>
+                            <p class="text-[0.65rem] text-gray-400 mt-1.5 italic">Este título aparecerá debajo del nombre del usuario.</p>
                         </div>
-                        <p class="text-[0.65rem] text-gray-400 mt-1.5 italic">Este título aparecerá debajo del nombre del usuario.</p>
-                    </div>
 
-                    <div>
-                        <label class="block text-sm font-bold text-gray-900 mb-1.5">Color del Nivel (Hex)</label>
-                        <div class="flex gap-2">
-                            <div class="w-10 h-10 rounded-lg bg-[#7f0df2] shadow-inner flex-shrink-0"></div>
-                            <input type="text" value="#7F0DF2" class="flex-1 px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm font-mono text-gray-900 focus:outline-none focus:border-[#6e00ff]">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-900 mb-1.5">Color del Nivel (Hex)</label>
+                            <div class="flex gap-2">
+                                <input id="nivel-color-preview" type="color" value="#7F0DF2"
+                                    oninput="document.getElementById('nivel-color-hex').value=this.value"
+                                    class="w-10 h-10 rounded-lg border border-gray-200 cursor-pointer flex-shrink-0 p-0.5">
+                                <input id="nivel-color-hex" type="text" value="#7F0DF2"
+                                    oninput="document.getElementById('nivel-color-preview').value=this.value"
+                                    class="flex-1 px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm font-mono text-gray-900 focus:outline-none focus:border-[#6e00ff]">
+                            </div>
                         </div>
-                    </div>
                 </div>
 
                 <div class="w-full md:w-[450px] bg-[#faf8fc] p-6 md:p-8 border-l border-gray-100">
@@ -475,38 +405,37 @@
                     </div>
 
                     <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm space-y-4">
-                        <div class="flex justify-between items-center text-[0.7rem] font-bold text-gray-400 uppercase tracking-widest mb-2">
-                            <span>Seleccionar Insignia</span>
+                        <div class="text-[0.7rem] font-bold text-gray-400 uppercase tracking-widest mb-2">Icono del Nivel</div>
+                        @php
+                        $iconosNivel = [
+                            'emoji_events','star','diamond','military_tech','local_fire_department',
+                            'bolt','shield','workspace_premium','verified','grade',
+                            'crown','rocket_launch','auto_awesome','whatshot','anchor',
+                            'electric_bolt','fitness_center','science','school','psychology'
+                        ];
+                        @endphp
+                        <div class="grid grid-cols-5 gap-2">
+                            @foreach($iconosNivel as $ico)
+                            <button type="button" onclick="pickIconNivel('{{ $ico }}')"
+                                id="nivel-ico-btn-{{ $ico }}"
+                                class="nivel-ico-btn w-10 h-10 flex items-center justify-center rounded-lg border border-gray-100 text-gray-400 hover:border-[#6e00ff] hover:text-[#6e00ff] transition cursor-pointer"
+                                title="{{ $ico }}">
+                                <span class="material-symbols-outlined text-[20px]">{{ $ico }}</span>
+                            </button>
+                            @endforeach
                         </div>
-                        
-                        <div class="flex justify-between gap-2">
-                            <div class="w-10 h-10 flex items-center justify-center rounded-lg border-2 border-[#6e00ff] text-[#6e00ff] bg-[#f3ebff] cursor-pointer">
-                                <span class="material-symbols-outlined text-[20px]">emoji_events</span>
-                            </div>
-                            <div class="w-10 h-10 flex items-center justify-center rounded-lg border border-gray-100 text-gray-300 hover:border-gray-300 cursor-pointer">
-                                <span class="material-symbols-outlined text-[20px]">star</span>
-                            </div>
-                            <div class="w-10 h-10 flex items-center justify-center rounded-lg border border-gray-100 text-gray-300 hover:border-gray-300 cursor-pointer">
-                                <span class="material-symbols-outlined text-[20px]">diamond</span>
-                            </div>
-                            <div class="w-10 h-10 flex items-center justify-center rounded-lg border border-gray-100 text-gray-300 hover:border-gray-300 cursor-pointer">
-                                <span class="material-symbols-outlined text-[20px]">king_bed</span>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="block text-[0.7rem] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Nombre de la Insignia</label>
-                            <input type="text" value="Defensor del Reino" class="w-full px-3 py-2 bg-gray-50 border border-gray-100 rounded text-xs font-bold text-gray-700 focus:outline-none">
-                        </div>
+                        <input id="nivel-icono" type="hidden" value="emoji_events">
+                        <p class="text-[0.65rem] text-gray-400">Icono seleccionado: <span id="nivel-icono-label" class="font-bold text-[#6e00ff]">emoji_events</span></p>
                     </div>
                 </div>
             </div>
 
             <div class="flex justify-end items-center gap-3 p-6 border-t border-gray-100 bg-white">
+                <div id="nivel-feedback" class="hidden mr-auto text-sm font-semibold px-4 py-2 rounded-lg"></div>
                 <button type="button" onclick="closeModal('nivel-modal')" class="px-5 py-2.5 text-sm font-bold text-gray-600 hover:bg-gray-50 rounded-lg transition">
                     Cancelar
                 </button>
-                <button class="flex items-center gap-2 px-6 py-2.5 bg-[#6e00ff] text-white rounded-lg text-sm font-bold hover:bg-[#5a00d1] shadow-md transition-all">
+                <button id="btn-publicar-nivel" onclick="guardarNivel()" class="flex items-center gap-2 px-6 py-2.5 bg-[#6e00ff] text-white rounded-lg text-sm font-bold hover:bg-[#5a00d1] shadow-md transition-all">
                     Publicar Nivel
                 </button>
             </div>
@@ -515,17 +444,185 @@
 
 <script>
     function openModal(id) {
-        const modal = document.getElementById(id);
-        if (modal) {
-            modal.classList.remove('hidden');
-        }
+        document.getElementById(id)?.classList.remove('hidden');
+    }
+    function closeModal(id) {
+        document.getElementById(id)?.classList.add('hidden');
+        ['nivel-feedback','insignia-feedback'].forEach(fid => {
+            const el = document.getElementById(fid);
+            if (el) { el.classList.add('hidden'); el.textContent = ''; }
+        });
     }
 
-    function closeModal(id) {
-        const modal = document.getElementById(id);
-        if (modal) {
-            modal.classList.add('hidden');
+    // ---- Icon picker para el nivel ----
+    function pickIconNivel(ico) {
+        document.querySelectorAll('.nivel-ico-btn').forEach(b => {
+            b.classList.remove('border-[#6e00ff]','text-[#6e00ff]','bg-[#f3ebff]');
+            b.classList.add('border-gray-100','text-gray-400');
+        });
+        const btn = document.getElementById('nivel-ico-btn-' + ico);
+        if (btn) {
+            btn.classList.add('border-[#6e00ff]','text-[#6e00ff]','bg-[#f3ebff]');
+            btn.classList.remove('border-gray-100','text-gray-400');
         }
+        document.getElementById('nivel-icono').value = ico;
+        document.getElementById('nivel-icono-label').textContent = ico;
+    }
+    // Seleccionar el primero por defecto al abrir
+    document.addEventListener('DOMContentLoaded', () => pickIconNivel('emoji_events'));
+
+    const CSRF = document.querySelector('meta[name="csrf-token"]')?.content ?? '';
+
+    async function guardarNivel() {
+        const numero_nivel = parseInt(document.getElementById('nivel-numero').value);
+        const nombre       = document.getElementById('nivel-nombre').value.trim();
+        const xp_requerida = parseInt(document.getElementById('nivel-xp').value);
+        const color_hex    = document.getElementById('nivel-color-hex').value.trim();
+        const icono        = document.getElementById('nivel-icono').value;
+
+        if (!numero_nivel || !nombre || isNaN(xp_requerida)) {
+            mostrarFeedback('nivel-feedback', false, 'Completa todos los campos obligatorios.');
+            return;
+        }
+
+        const btn = document.getElementById('btn-publicar-nivel');
+        btn.disabled = true; btn.textContent = 'Publicando...';
+
+        try {
+            const res = await fetch('{{ route("gamificacion.nivel") }}', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF },
+                body: JSON.stringify({ numero_nivel, nombre, xp_requerida, color_hex, icono })
+            });
+            const json = await res.json();
+            if (json.ok) {
+                mostrarFeedback('nivel-feedback', true, '✅ Nivel creado correctamente.');
+                const lista = document.getElementById('lista-niveles');
+                const d = json.data;
+                const row = document.createElement('div');
+                row.id = 'nivel-row-' + d.id;
+                row.className = 'flex flex-col sm:flex-row sm:items-center gap-4 p-4 hover:bg-gray-50 rounded-xl transition-colors group';
+                row.innerHTML = `
+                    <div class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-white text-sm flex-shrink-0" style="background-color:${d.color_hex ?? '#6e00ff'}">${d.numero_nivel}</div>
+                    <div class="flex-1"><h4 class="text-gray-900 font-bold text-sm">${d.nombre}</h4><p class="text-xs text-gray-500">${Number(d.xp_requerida).toLocaleString()} XP requerida</p></div>
+                    <span class="text-xs text-gray-400 font-mono">${d.color_hex ?? ''}</span>
+                    <button onclick="eliminarNivel(${d.id}, this)" class="opacity-0 group-hover:opacity-100 transition text-gray-300 hover:text-red-500 flex-shrink-0" title="Eliminar nivel">
+                        <span class="material-symbols-outlined text-[20px]">delete</span>
+                    </button>`;
+                lista.appendChild(row);
+                ['nivel-numero','nivel-nombre','nivel-xp'].forEach(id => document.getElementById(id).value = '');
+                setTimeout(() => closeModal('nivel-modal'), 1800);
+            } else {
+                mostrarFeedback('nivel-feedback', false, '❌ Error al crear el nivel.');
+            }
+        } catch { mostrarFeedback('nivel-feedback', false, '❌ Error de conexión.'); }
+        finally { btn.disabled = false; btn.textContent = 'Publicar Nivel'; }
+    }
+
+    async function eliminarNivel(id, btnEl) {
+        if (!confirm('¿Eliminar este nivel? Esta accion no se puede deshacer.')) return;
+        btnEl.disabled = true;
+        try {
+            const res = await fetch(`/api/gamificacion/nivel/${id}`, {
+                method: 'DELETE',
+                headers: { 'X-CSRF-TOKEN': CSRF }
+            });
+            const json = await res.json();
+            if (json.ok) {
+                const row = document.getElementById('nivel-row-' + id);
+                if (row) {
+                    row.style.opacity = '0';
+                    row.style.transition = 'opacity .3s';
+                    setTimeout(() => row.remove(), 300);
+                }
+            } else {
+                alert('Error al eliminar el nivel.');
+            }
+        } catch { alert('Error de conexión.'); }
+        finally { btnEl.disabled = false; }
+    }
+
+    async function guardarMedalla() {
+        const nombre      = document.getElementById('insignia-nombre').value.trim();
+        const descripcion = document.getElementById('insignia-descripcion').value.trim();
+        const icono       = document.getElementById('insignia-icono').value.trim();
+
+        if (!nombre) {
+            mostrarFeedback('insignia-feedback', false, 'El nombre es obligatorio.');
+            return;
+        }
+
+        const btn = document.getElementById('btn-guardar-insignia');
+        btn.disabled = true; btn.textContent = 'Guardando...';
+
+        try {
+            const res = await fetch('{{ route("gamificacion.medalla") }}', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF },
+                body: JSON.stringify({ nombre, descripcion, icono })
+            });
+            const json = await res.json();
+            if (json.ok) {
+                mostrarFeedback('insignia-feedback', true, '✅ Medalla creada correctamente.');
+                const lista = document.getElementById('lista-medallas');
+                const d = json.data;
+                const row = document.createElement('div');
+                row.id = 'medalla-row-' + d.id;
+                row.className = 'flex items-start justify-between p-4 bg-gray-50 border border-gray-100 rounded-xl group';
+                row.innerHTML = `
+                    <div class="flex gap-4">
+                        <div class="w-12 h-12 bg-[#f3ebff] text-[#6e00ff] rounded-lg flex items-center justify-center flex-shrink-0">
+                            <span class="material-symbols-outlined">${d.icono ?? 'workspace_premium'}</span>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-900 text-sm mb-0.5">${d.nombre}</h4>
+                            <p class="text-xs text-gray-500">${d.descripcion ?? ''}</p>
+                            <p class="text-xs text-gray-400 mt-1">ID: ${d.id}</p>
+                        </div>
+                    </div>
+                    <button onclick="eliminarMedalla(${d.id}, this)" class="opacity-0 group-hover:opacity-100 transition text-gray-300 hover:text-red-500 flex-shrink-0 ml-2" title="Eliminar medalla">
+                        <span class="material-symbols-outlined text-[20px]">delete</span>
+                    </button>`;
+                lista.appendChild(row);
+                document.getElementById('insignia-nombre').value = '';
+                document.getElementById('insignia-descripcion').value = '';
+                setTimeout(() => closeModal('insignia-modal'), 1800);
+            } else {
+                mostrarFeedback('insignia-feedback', false, '❌ Error al crear la medalla.');
+            }
+        } catch { mostrarFeedback('insignia-feedback', false, '❌ Error de conexión.'); }
+        finally { btn.disabled = false; btn.textContent = 'Guardar Insignia'; }
+    }
+
+    async function eliminarMedalla(id, btnEl) {
+        if (!confirm('¿Eliminar esta medalla? Esta acción no se puede deshacer.')) return;
+        btnEl.disabled = true;
+        try {
+            const res = await fetch(`/api/gamificacion/medalla/${id}`, {
+                method: 'DELETE',
+                headers: { 'X-CSRF-TOKEN': CSRF }
+            });
+            const json = await res.json();
+            if (json.ok) {
+                const row = document.getElementById('medalla-row-' + id);
+                if (row) {
+                    row.style.opacity = '0';
+                    row.style.transition = 'opacity .3s';
+                    setTimeout(() => row.remove(), 300);
+                }
+            } else {
+                alert('Error al eliminar la medalla.');
+            }
+        } catch { alert('Error de conexión.'); }
+        finally { btnEl.disabled = false; }
+    }
+
+    function mostrarFeedback(id, ok, msg) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.textContent = msg;
+        el.className = `mr-auto text-sm font-semibold px-4 py-2 rounded-lg ${ok ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'}`;
+        el.classList.remove('hidden');
     }
 </script>
 @endsection

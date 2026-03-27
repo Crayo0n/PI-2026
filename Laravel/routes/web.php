@@ -5,36 +5,48 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\NivelController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\GamificacionController;
 
-// ─── Rutas Públicas (sin autenticación) ─────────────────────────────────────
+// ─── Rutas Públicas
 Route::get('/login', [LoginController::class, 'showLogin'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.post');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-// ─── Rutas Protegidas (requieren sesión Admin) ───────────────────────────────
+// ─── Rutas Protegidas
 Route::middleware('admin.auth')->group(function () {
 
-Route::get('/dashboard', function () {
-    return view('dashboard.index');
-});
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/analitica', [DashboardController::class, 'analitica'])->name('analitica');
+    Route::get('/analitica/exportar', [DashboardController::class, 'exportar'])->name('analitica.exportar');
 
-Route::get('/analitica', function () {
-    return view('dashboard.analitica');
-});
+    Route::get('/usuarios', [UsuarioController::class, 'index'])->name('usuarios.index');
 
-Route::get('/configuracion', function () {
-    return view('config.configuracion');
-});
+    Route::get('/niveles', [NivelController::class, 'index'])->name('niveles.index');
+    Route::post('/niveles', [NivelController::class, 'store'])->name('niveles.store');
 
-Route::get('/seguridad', function () {
-    return view('config.seguridad');
-});
+    Route::get('/configuracion', fn() => view('config.configuracion'))->name('configuracion');
+    Route::get('/seguridad', fn() => view('config.seguridad'))->name('seguridad');
+    Route::get('/notificaciones', fn() => view('config.notificaciones'))->name('notificaciones');
+    Route::get('/gamificacion', [GamificacionController::class, 'index'])->name('gamificacion');
 
-Route::get('/notificaciones', function () {
-    return view('config.notificaciones');
-});
+    // Proxy JSON: crear nivel
+    Route::post('/api/gamificacion/nivel', [GamificacionController::class, 'storeNivel'])->name('gamificacion.nivel');
 
-Route::get('/gamificacion', function () {
-    return view('config.gamificacion');
-});
+    // Proxy JSON: crear medalla
+    Route::post('/api/gamificacion/medalla', [GamificacionController::class, 'storeMedalla'])->name('gamificacion.medalla');
 
+    // Proxy JSON: eliminar nivel
+    Route::delete('/api/gamificacion/nivel/{id}', [GamificacionController::class, 'destroyNivel'])->name('gamificacion.nivel.destroy');
+
+    // Proxy JSON: eliminar medalla
+    Route::delete('/api/gamificacion/medalla/{id}', [GamificacionController::class, 'destroyMedalla'])->name('gamificacion.medalla.destroy');
+
+    // Proxy: enviar alerta del sistema a FastAPI
+    Route::post('/api/alerta', function (\Illuminate\Http\Request $request) {
+        $response = \App\Services\ApiService::post('/notificaciones/', [
+            'usuario_id' => $request->input('usuario_id', 1),
+            'mensaje'    => $request->input('mensaje'),
+        ]);
+        return response()->json(['ok' => $response->successful()], $response->status());
+    })->name('api.alerta');
+});
