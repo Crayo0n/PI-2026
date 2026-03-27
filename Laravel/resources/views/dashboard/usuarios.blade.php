@@ -116,12 +116,14 @@
 
     </div>
 
-    {{-- ===== PANEL LATERAL DINÁMICO ===== --}}
-    <div id="panel-usuario"
-         class="w-80 border-l border-gray-200 bg-white flex flex-col overflow-y-auto transition-all duration-300 hidden lg:flex opacity-60">
+    {{-- ===== PANEL LATERAL / MODAL RESPONSIVO ===== --}}
+    <div id="panel-backdrop" onclick="cerrarPanel()" class="fixed inset-0 bg-black/50 z-40 lg:hidden hidden backdrop-blur-sm transition-opacity duration-300"></div>
 
-        {{-- Estado vacío --}}
-        <div id="panel-vacio" class="flex flex-col items-center justify-center flex-1 text-center px-8 text-gray-400">
+    <div id="panel-usuario"
+         class="fixed inset-y-0 right-0 w-full sm:w-96 lg:static lg:w-80 z-50 lg:z-auto bg-white border-l border-gray-200 transform translate-x-full lg:translate-x-0 transition-transform duration-300 flex flex-col shadow-[-10px_0_30px_rgba(0,0,0,0.05)] lg:shadow-none">
+
+        {{-- Estado vacío (Solo visible en desktop) --}}
+        <div id="panel-vacio" class="hidden lg:flex flex-col items-center justify-center flex-1 text-center px-8 text-gray-400">
             <svg class="w-12 h-12 mb-3 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0z"></path>
             </svg>
@@ -129,10 +131,10 @@
         </div>
 
         {{-- Contenido del usuario seleccionado --}}
-        <div id="panel-contenido" class="hidden flex-col h-full">
+        <div id="panel-contenido" class="hidden flex-col h-full bg-white">
 
             <div class="p-6 text-center border-b border-gray-100 relative">
-                <button onclick="cerrarPanel()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                <button onclick="cerrarPanel()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 p-2 hover:bg-gray-100 rounded-full transition-colors">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
 
@@ -223,7 +225,10 @@ function mostrarPanel(u) {
     document.getElementById('panel-vacio').classList.add('hidden');
     document.getElementById('panel-contenido').classList.remove('hidden');
     document.getElementById('panel-contenido').classList.add('flex');
-    document.getElementById('panel-usuario').classList.remove('opacity-60');
+    
+    // Slide-in para móvil
+    document.getElementById('panel-usuario').classList.remove('translate-x-full');
+    document.getElementById('panel-backdrop').classList.remove('hidden');
 
     // Resaltar fila activa
     document.querySelectorAll('.fila-usuario').forEach(r => r.classList.remove('bg-purple-50', 'ring-1', 'ring-inset', 'ring-purple-200'));
@@ -233,10 +238,18 @@ function mostrarPanel(u) {
 }
 
 function cerrarPanel() {
+    // Desktop: Mostrar vacío
     document.getElementById('panel-vacio').classList.remove('hidden');
     document.getElementById('panel-contenido').classList.add('hidden');
     document.getElementById('panel-contenido').classList.remove('flex');
-    document.getElementById('panel-usuario').classList.add('opacity-60');
+    
+    // Slide-out para móvil
+    const panel = document.getElementById('panel-usuario');
+    if (!window.matchMedia("(min-width: 1024px)").matches) {
+        panel.classList.add('translate-x-full');
+    }
+    document.getElementById('panel-backdrop').classList.add('hidden');
+
     document.querySelectorAll('.fila-usuario').forEach(r => r.classList.remove('bg-purple-50'));
 }
 

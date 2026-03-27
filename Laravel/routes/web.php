@@ -7,7 +7,6 @@ use App\Http\Controllers\NivelController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GamificacionController;
 
-// ─── Raíz → redirige al dashboard
 Route::get('/', fn() => redirect('/dashboard'));
 
 // ─── Rutas Públicas
