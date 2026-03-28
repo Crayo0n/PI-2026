@@ -7,28 +7,6 @@ import app.models
 
 Base.metadata.create_all(bind=engine)
 
-def seed_default_user():
-    db = sesionLocal()
-    try:
-        # Check if user with ID 1 exists
-        user = db.query(Usuario).filter(Usuario.id == 1).first()
-        if not user:
-            new_user = Usuario(
-                id=1,
-                nombre_usuario="MVP Demo User",
-                correo="demo@prioritypulse.com",
-                password_hash="fakehash_mvp_only"
-            )
-            db.add(new_user)
-            db.commit()
-    except Exception as e:
-        print(f"Error seeding default user: {e}")
-    finally:
-        db.close()
-
-seed_default_user()
-
-
 app = FastAPI(
     title=settings.PROJECT_NAME,
     openapi_url="/api/v1/openapi.json"

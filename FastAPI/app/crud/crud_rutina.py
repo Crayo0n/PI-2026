@@ -9,6 +9,9 @@ def get_rutina(db: Session, rutina_id: int):
 def get_rutinas_by_usuario(db: Session, usuario_id: int, skip: int = 0, limit: int = 100):
     return db.query(Rutina).filter(Rutina.usuario_id == usuario_id).offset(skip).limit(limit).all()
 
+def get_rutinas_publicas(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(Rutina).filter(Rutina.es_publica == True).offset(skip).limit(limit).all()
+
 def crear_rutina(db: Session, rutina: RutinaCreate):
     db_rutina = Rutina(**rutina.model_dump())
     db.add(db_rutina)

@@ -8,7 +8,7 @@ class Tarea(Base):
     __tablename__ = "tareas"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
-    usuario_id: Mapped[int] = mapped_column(ForeignKey("usuarios.id"))
+    usuario_id: Mapped[Optional[int]] = mapped_column(ForeignKey("usuarios.id"), nullable=True)
     titulo: Mapped[str] = mapped_column(String)
     descripcion: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     estado: Mapped[str] = mapped_column(String, default="pendiente")

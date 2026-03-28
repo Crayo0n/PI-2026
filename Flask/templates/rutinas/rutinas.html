@@ -28,239 +28,56 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8">
         
+        {% for rutina in rutinas %}
+        <!-- Dynamic Routine Card -->
         <div class="bg-white rounded-3xl border border-gray-100 p-6 flex flex-col h-full relative overflow-hidden group hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
-            <div class="absolute top-0 right-0 w-32 h-32 bg-purple-50 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-150 duration-500"></div>
+            {% set theme_color = {
+                'indigo': 'from-indigo-600 to-purple-600 shadow-indigo-500/20 bg-indigo-50',
+                'blue': 'from-blue-600 to-cyan-500 shadow-blue-500/20 bg-blue-50',
+                'purple': 'from-purple-600 to-indigo-700 shadow-purple-500/20 bg-purple-50',
+                'teal': 'from-teal-400 to-emerald-600 shadow-teal-500/20 bg-teal-50',
+                'amber': 'from-amber-400 to-orange-500 shadow-orange-500/20 bg-amber-50',
+                'emerald': 'from-emerald-400 to-teal-600 shadow-emerald-500/20 bg-emerald-50',
+                'rose': 'from-rose-400 to-pink-600 shadow-rose-500/20 bg-rose-50'
+            }.get(rutina.color, 'from-primary to-indigo-600 shadow-primary/20 bg-purple-50') %}
+
+            {% set color_parts = theme_color.split(' ') %}
+
+            <div class="absolute top-0 right-0 w-32 h-32 {{ color_parts[2] }} rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-150 duration-500"></div>
             
             <div class="flex items-start justify-between mb-6 relative z-10">
-                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-indigo-600 flex items-center justify-center shadow-lg shadow-primary/20 text-white transform group-hover:rotate-6 transition-transform duration-300">
-                    <span class="material-symbols-outlined text-3xl">wb_sunny</span>
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br {{ color_parts[0] }} {{ color_parts[1] }} flex items-center justify-center shadow-lg {{ color_parts[2] }} text-white transform group-hover:rotate-6 transition-transform duration-300">
+                    <span class="material-symbols-outlined text-3xl">{{ rutina.icono or 'routine' }}</span>
                 </div>
-                <span class="px-3 py-1 rounded-full bg-gray-50 text-gray-600 text-[0.65rem] font-black uppercase tracking-widest border border-gray-200">45 Mins</span>
+                <span class="px-3 py-1 rounded-full bg-gray-50 text-gray-600 text-[0.65rem] font-black uppercase tracking-widest border border-gray-200">
+                    {{ rutina.tareas|length * 10 }} Mins
+                </span>
             </div>
             
-            <h3 class="text-xl font-black text-gray-900 mb-2">Mañana Maestra</h3>
-            <p class="text-sm font-medium text-gray-500 mb-6">Comienza tu día con intención y claridad usando esta secuencia respaldada científicamente.</p>
+            <h3 class="text-xl font-black text-gray-900 mb-2">{{ rutina.nombre }}</h3>
+            <p class="text-sm font-medium text-gray-500 mb-6">{{ rutina.descripcion or 'Mejora tu flujo de trabajo con esta rutina.' }}</p>
             
             <div class="space-y-3 mb-8 flex-1">
+                {% for tarea in rutina.tareas[:3] %}
                 <div class="flex items-center gap-3">
                     <div class="w-6 h-6 rounded-full bg-green-50 text-green-500 flex items-center justify-center flex-shrink-0">
                         <span class="material-symbols-outlined text-[14px] font-bold">check</span>
                     </div>
-                    <span class="text-gray-700 font-bold text-sm">Hidratación y estiramiento</span>
+                    <span class="text-gray-700 font-bold text-sm">{{ tarea.titulo }}</span>
                 </div>
-                <div class="flex items-center gap-3">
-                    <div class="w-6 h-6 rounded-full bg-green-50 text-green-500 flex items-center justify-center flex-shrink-0">
-                        <span class="material-symbols-outlined text-[14px] font-bold">check</span>
-                    </div>
-                    <span class="text-gray-700 font-bold text-sm">10m Meditación</span>
+                {% endfor %}
+                {% if rutina.tareas|length > 3 %}
+                <div class="text-[0.65rem] font-bold text-gray-400 uppercase tracking-widest pl-9">
+                    + {{ rutina.tareas|length - 3 }} tareas más
                 </div>
-                <div class="flex items-center gap-3">
-                    <div class="w-6 h-6 rounded-full bg-green-50 text-green-500 flex items-center justify-center flex-shrink-0">
-                        <span class="material-symbols-outlined text-[14px] font-bold">check</span>
-                    </div>
-                    <span class="text-gray-700 font-bold text-sm">Revisar metas diarias</span>
-                </div>
+                {% endif %}
             </div>
             
-            <button onclick="openModal('modal-detalle-rutina')" type="button" class="w-full py-3 rounded-xl bg-primary text-white font-bold shadow-md shadow-primary/20 hover:bg-primary-hover transition-all flex items-center justify-center gap-2">
-                <span class="material-symbols-outlined text-[20px]">add_circle</span> Añadir a mi día
+            <button onclick='openRoutineModal({{ rutina|tojson }})' type="button" class="w-full py-3 rounded-xl bg-primary text-white font-bold shadow-md shadow-primary/20 hover:bg-primary-hover transition-all flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-[20px]">explore</span> Ver Detalles
             </button>
         </div>
-
-        <div class="bg-white rounded-3xl border border-gray-100 p-6 flex flex-col h-full relative overflow-hidden group hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
-            <div class="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-150 duration-500"></div>
-            
-            <div class="flex items-start justify-between mb-6 relative z-10">
-                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-500 flex items-center justify-center shadow-lg shadow-blue-500/20 text-white transform group-hover:-rotate-6 transition-transform duration-300">
-                    <span class="material-symbols-outlined text-3xl">psychology</span>
-                </div>
-                <span class="px-3 py-1 rounded-full bg-gray-50 text-gray-600 text-[0.65rem] font-black uppercase tracking-widest border border-gray-200">15 Mins</span>
-            </div>
-            
-            <h3 class="text-xl font-black text-gray-900 mb-2">Prep. Trabajo Profundo</h3>
-            <p class="text-sm font-medium text-gray-500 mb-6">Elimina distracciones y prepara tu cerebro para una sesión de enfoque intenso.</p>
-            
-            <div class="space-y-3 mb-8 flex-1">
-                <div class="flex items-center gap-3">
-                    <div class="w-6 h-6 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center flex-shrink-0">
-                        <span class="material-symbols-outlined text-[14px] font-bold">check</span>
-                    </div>
-                    <span class="text-gray-700 font-bold text-sm">Limpiar escritorio</span>
-                </div>
-                <div class="flex items-center gap-3">
-                    <div class="w-6 h-6 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center flex-shrink-0">
-                        <span class="material-symbols-outlined text-[14px] font-bold">check</span>
-                    </div>
-                    <span class="text-gray-700 font-bold text-sm">Bloquear notificaciones</span>
-                </div>
-                <div class="flex items-center gap-3">
-                    <div class="w-6 h-6 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center flex-shrink-0">
-                        <span class="material-symbols-outlined text-[14px] font-bold">check</span>
-                    </div>
-                    <span class="text-gray-700 font-bold text-sm">Timer de 90m</span>
-                </div>
-            </div>
-            
-            <button onclick="openModal('modal-detalle-rutina')" type="button" class="w-full py-3 rounded-xl bg-white border-2 border-blue-100 text-blue-600 font-bold hover:bg-blue-50 transition-all flex items-center justify-center gap-2 group-hover:border-blue-500">
-                <span class="material-symbols-outlined text-[20px]">add_circle</span> Añadir a mi día
-            </button>
-        </div>
-
-        <div class="bg-white rounded-3xl border border-gray-100 p-6 flex flex-col h-full relative overflow-hidden group hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
-            <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-50 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-150 duration-500"></div>
-            
-            <div class="flex items-start justify-between mb-6 relative z-10">
-                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-700 flex items-center justify-center shadow-lg shadow-indigo-500/20 text-white transform group-hover:rotate-6 transition-transform duration-300">
-                    <span class="material-symbols-outlined text-3xl">nights_stay</span>
-                </div>
-                <span class="px-3 py-1 rounded-full bg-gray-50 text-gray-600 text-[0.65rem] font-black uppercase tracking-widest border border-gray-200">30 Mins</span>
-            </div>
-            
-            <h3 class="text-xl font-black text-gray-900 mb-2">Cierre del Día</h3>
-            <p class="text-sm font-medium text-gray-500 mb-6">Desconéctate del trabajo y prepárate para un sueño reparador para recargar energías.</p>
-            
-            <div class="space-y-3 mb-8 flex-1">
-                <div class="flex items-center gap-3">
-                    <div class="w-6 h-6 rounded-full bg-indigo-50 text-indigo-500 flex items-center justify-center flex-shrink-0">
-                        <span class="material-symbols-outlined text-[14px] font-bold">check</span>
-                    </div>
-                    <span class="text-gray-700 font-bold text-sm">Revisar tareas completadas</span>
-                </div>
-                <div class="flex items-center gap-3">
-                    <div class="w-6 h-6 rounded-full bg-indigo-50 text-indigo-500 flex items-center justify-center flex-shrink-0">
-                        <span class="material-symbols-outlined text-[14px] font-bold">check</span>
-                    </div>
-                    <span class="text-gray-700 font-bold text-sm">Reflexiones del diario</span>
-                </div>
-                <div class="flex items-center gap-3">
-                    <div class="w-6 h-6 rounded-full bg-indigo-50 text-indigo-500 flex items-center justify-center flex-shrink-0">
-                        <span class="material-symbols-outlined text-[14px] font-bold">check</span>
-                    </div>
-                    <span class="text-gray-700 font-bold text-sm">Preparar lista de mañana</span>
-                </div>
-            </div>
-            
-            <button onclick="openModal('modal-detalle-rutina')" type="button" class="w-full py-3 rounded-xl bg-white border-2 border-indigo-100 text-indigo-600 font-bold hover:bg-indigo-50 transition-all flex items-center justify-center gap-2 group-hover:border-indigo-500">
-                <span class="material-symbols-outlined text-[20px]">add_circle</span> Añadir a mi día
-            </button>
-        </div>
-
-        <div class="bg-white rounded-3xl border border-gray-100 p-6 flex flex-col h-full relative overflow-hidden group hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
-            <div class="absolute top-0 right-0 w-32 h-32 bg-teal-50 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-150 duration-500"></div>
-            
-            <div class="flex items-start justify-between mb-6 relative z-10">
-                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-teal-400 to-emerald-600 flex items-center justify-center shadow-lg shadow-teal-500/20 text-white transform group-hover:-rotate-6 transition-transform duration-300">
-                    <span class="material-symbols-outlined text-3xl">battery_charging_full</span>
-                </div>
-                <span class="px-3 py-1 rounded-full bg-gray-50 text-gray-600 text-[0.65rem] font-black uppercase tracking-widest border border-gray-200">10 Mins</span>
-            </div>
-            
-            <h3 class="text-xl font-black text-gray-900 mb-2">Reinicio Rápido</h3>
-            <p class="text-sm font-medium text-gray-500 mb-6">Impulso rápido de energía para combatir el bajón de media tarde.</p>
-            
-            <div class="space-y-3 mb-8 flex-1">
-                <div class="flex items-center gap-3">
-                    <div class="w-6 h-6 rounded-full bg-teal-50 text-teal-500 flex items-center justify-center flex-shrink-0">
-                        <span class="material-symbols-outlined text-[14px] font-bold">check</span>
-                    </div>
-                    <span class="text-gray-700 font-bold text-sm">Beber Agua</span>
-                </div>
-                <div class="flex items-center gap-3">
-                    <div class="w-6 h-6 rounded-full bg-teal-50 text-teal-500 flex items-center justify-center flex-shrink-0">
-                        <span class="material-symbols-outlined text-[14px] font-bold">check</span>
-                    </div>
-                    <span class="text-gray-700 font-bold text-sm">Respiración cuadrada</span>
-                </div>
-                <div class="flex items-center gap-3">
-                    <div class="w-6 h-6 rounded-full bg-teal-50 text-teal-500 flex items-center justify-center flex-shrink-0">
-                        <span class="material-symbols-outlined text-[14px] font-bold">check</span>
-                    </div>
-                    <span class="text-gray-700 font-bold text-sm">Caminar / Estirar</span>
-                </div>
-            </div>
-            
-            <button onclick="openModal('modal-detalle-rutina')" type="button" class="w-full py-3 rounded-xl bg-white border-2 border-teal-100 text-teal-600 font-bold hover:bg-teal-50 transition-all flex items-center justify-center gap-2 group-hover:border-teal-500">
-                <span class="material-symbols-outlined text-[20px]">add_circle</span> Añadir a mi día
-            </button>
-        </div>
-
-        <div class="bg-white rounded-3xl border border-gray-100 p-6 flex flex-col h-full relative overflow-hidden group hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
-            <div class="absolute top-0 right-0 w-32 h-32 bg-orange-50 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-150 duration-500"></div>
-            
-            <div class="flex items-start justify-between mb-6 relative z-10">
-                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center shadow-lg shadow-orange-500/20 text-white transform group-hover:rotate-6 transition-transform duration-300">
-                    <span class="material-symbols-outlined text-3xl">calendar_month</span>
-                </div>
-                <span class="px-3 py-1 rounded-full bg-gray-50 text-gray-600 text-[0.65rem] font-black uppercase tracking-widest border border-gray-200">60 Mins</span>
-            </div>
-            
-            <h3 class="text-xl font-black text-gray-900 mb-2">Resumen Semanal</h3>
-            <p class="text-sm font-medium text-gray-500 mb-6">Analiza el rendimiento de la semana pasada y planifica la siguiente.</p>
-            
-            <div class="space-y-3 mb-8 flex-1">
-                <div class="flex items-center gap-3">
-                    <div class="w-6 h-6 rounded-full bg-orange-50 text-orange-500 flex items-center justify-center flex-shrink-0">
-                        <span class="material-symbols-outlined text-[14px] font-bold">check</span>
-                    </div>
-                    <span class="text-gray-700 font-bold text-sm">Limpiar bandeja de entrada</span>
-                </div>
-                <div class="flex items-center gap-3">
-                    <div class="w-6 h-6 rounded-full bg-orange-50 text-orange-500 flex items-center justify-center flex-shrink-0">
-                        <span class="material-symbols-outlined text-[14px] font-bold">check</span>
-                    </div>
-                    <span class="text-gray-700 font-bold text-sm">Revisar calendario</span>
-                </div>
-                <div class="flex items-center gap-3">
-                    <div class="w-6 h-6 rounded-full bg-orange-50 text-orange-500 flex items-center justify-center flex-shrink-0">
-                        <span class="material-symbols-outlined text-[14px] font-bold">check</span>
-                    </div>
-                    <span class="text-gray-700 font-bold text-sm">Fijar objetivos semanales</span>
-                </div>
-            </div>
-            
-            <button onclick="openModal('modal-detalle-rutina')" type="button" class="w-full py-3 rounded-xl bg-white border-2 border-orange-100 text-orange-600 font-bold hover:bg-orange-50 transition-all flex items-center justify-center gap-2 group-hover:border-orange-500">
-                <span class="material-symbols-outlined text-[20px]">add_circle</span> Añadir a mi día
-            </button>
-        </div>
-
-        <div class="bg-white rounded-3xl border border-gray-100 p-6 flex flex-col h-full relative overflow-hidden group hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
-            <div class="absolute top-0 right-0 w-32 h-32 bg-fuchsia-50 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-150 duration-500"></div>
-            
-            <div class="flex items-start justify-between mb-6 relative z-10">
-                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-fuchsia-500 to-purple-600 flex items-center justify-center shadow-lg shadow-fuchsia-500/20 text-white transform group-hover:-rotate-6 transition-transform duration-300">
-                    <span class="material-symbols-outlined text-3xl">lightbulb</span>
-                </div>
-                <span class="px-3 py-1 rounded-full bg-gray-50 text-gray-600 text-[0.65rem] font-black uppercase tracking-widest border border-gray-200">90 Mins</span>
-            </div>
-            
-            <h3 class="text-xl font-black text-gray-900 mb-2">Tormenta Creativa</h3>
-            <p class="text-sm font-medium text-gray-500 mb-6">Tiempo no estructurado para lluvia de ideas, ideación y pensamiento libre.</p>
-            
-            <div class="space-y-3 mb-8 flex-1">
-                <div class="flex items-center gap-3">
-                    <div class="w-6 h-6 rounded-full bg-fuchsia-50 text-fuchsia-500 flex items-center justify-center flex-shrink-0">
-                        <span class="material-symbols-outlined text-[14px] font-bold">check</span>
-                    </div>
-                    <span class="text-gray-700 font-bold text-sm">Mapas mentales</span>
-                </div>
-                <div class="flex items-center gap-3">
-                    <div class="w-6 h-6 rounded-full bg-fuchsia-50 text-fuchsia-500 flex items-center justify-center flex-shrink-0">
-                        <span class="material-symbols-outlined text-[14px] font-bold">check</span>
-                    </div>
-                    <span class="text-gray-700 font-bold text-sm">Mood Boarding</span>
-                </div>
-                <div class="flex items-center gap-3">
-                    <div class="w-6 h-6 rounded-full bg-fuchsia-50 text-fuchsia-500 flex items-center justify-center flex-shrink-0">
-                        <span class="material-symbols-outlined text-[14px] font-bold">check</span>
-                    </div>
-                    <span class="text-gray-700 font-bold text-sm">Bocetaje</span>
-                </div>
-            </div>
-            
-            <button onclick="openModal('modal-detalle-rutina')" type="button" class="w-full py-3 rounded-xl bg-white border-2 border-fuchsia-100 text-fuchsia-600 font-bold hover:bg-fuchsia-50 transition-all flex items-center justify-center gap-2 group-hover:border-fuchsia-500">
-                <span class="material-symbols-outlined text-[20px]">add_circle</span> Añadir a mi día
-            </button>
-        </div>
+        {% endfor %}
 
     </div>
 </div>
@@ -284,85 +101,31 @@
             </button>
 
             <div class="flex items-start gap-5 mb-6 pr-6">
-                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-indigo-600 flex items-center justify-center shadow-lg shadow-primary/20 text-white shrink-0 mt-1">
-                    <span class="material-symbols-outlined text-4xl">wb_sunny</span>
+                <div id="modal-icon-container" class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-indigo-600 flex items-center justify-center shadow-lg shadow-primary/20 text-white shrink-0 mt-1">
+                    <span id="modal-icono" class="material-symbols-outlined text-4xl">wb_sunny</span>
                 </div>
                 <div>
                     <div class="flex flex-wrap items-center gap-2 mb-2">
-                        <h2 class="text-xl font-black text-gray-900 leading-tight">Mañana Maestra</h2>
-                        <span class="px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-600 text-[0.65rem] font-black uppercase tracking-widest border border-gray-200">45 Mins</span>
+                        <h2 id="modal-titulo" class="text-xl font-black text-gray-900 leading-tight">Nombre de Rutina</h2>
+                        <span id="modal-tiempo" class="px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-600 text-[0.65rem] font-black uppercase tracking-widest border border-gray-200">-- Mins</span>
                     </div>
-                    <p class="text-[0.8rem] text-gray-500 font-medium leading-relaxed">
-                        Esta rutina está diseñada para optimizar tus niveles de cortisol matutino y establecer una base mental sólida. Al combinar movimiento suave con reflexión intencional, preparas tu cerebro para un rendimiento cognitivo máximo durante el día.
+                    <p id="modal-descripcion" class="text-[0.8rem] text-gray-500 font-medium leading-relaxed">
+                        Descripción de la rutina...
                     </p>
                 </div>
             </div>
 
             <div class="flex items-center justify-between mb-4 pt-4 border-t border-gray-100">
                 <h3 class="text-xs font-bold text-gray-900 uppercase tracking-widest">Tareas Incluidas</h3>
-                <span class="text-[0.7rem] font-bold text-gray-400 bg-gray-50 px-2 py-1 rounded-lg">5 tareas seleccionadas</span>
+                <span id="modal-count" class="text-[0.7rem] font-bold text-gray-400 bg-gray-50 px-2 py-1 rounded-lg">-- tareas</span>
             </div>
 
-            <div class="space-y-3 overflow-y-auto pr-2 custom-scrollbar flex-1 -mr-2 mb-6">
-                
-                <label class="flex items-center gap-4 p-3 rounded-xl border border-gray-200 hover:border-primary/40 hover:bg-primary/5 transition-all cursor-pointer group">
-                    <div class="relative flex items-center">
-                        <input type="checkbox" checked class="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary/50 transition-colors cursor-pointer accent-primary"/>
-                    </div>
-                    <div class="flex-1">
-                        <span class="block text-sm font-bold text-gray-800 group-hover:text-primary transition-colors">Hidratación</span>
-                        <span class="block text-xs font-medium text-gray-500 mt-0.5">Beber 500ml de agua con limón</span>
-                    </div>
-                    <span class="text-[0.65rem] font-black text-gray-400 bg-gray-100 px-2 py-1 rounded">5m</span>
-                </label>
-
-                <label class="flex items-center gap-4 p-3 rounded-xl border border-gray-200 hover:border-primary/40 hover:bg-primary/5 transition-all cursor-pointer group">
-                    <div class="relative flex items-center">
-                        <input type="checkbox" checked class="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary/50 transition-colors cursor-pointer accent-primary"/>
-                    </div>
-                    <div class="flex-1">
-                        <span class="block text-sm font-bold text-gray-800 group-hover:text-primary transition-colors">Estiramiento</span>
-                        <span class="block text-xs font-medium text-gray-500 mt-0.5">Movilidad ligera para despertar el cuerpo</span>
-                    </div>
-                    <span class="text-[0.65rem] font-black text-gray-400 bg-gray-100 px-2 py-1 rounded">10m</span>
-                </label>
-
-                <label class="flex items-center gap-4 p-3 rounded-xl border border-gray-200 hover:border-primary/40 hover:bg-primary/5 transition-all cursor-pointer group">
-                    <div class="relative flex items-center">
-                        <input type="checkbox" checked class="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary/50 transition-colors cursor-pointer accent-primary"/>
-                    </div>
-                    <div class="flex-1">
-                        <span class="block text-sm font-bold text-gray-800 group-hover:text-primary transition-colors">Meditación</span>
-                        <span class="block text-xs font-medium text-gray-500 mt-0.5">Enfoque en la respiración y presencia</span>
-                    </div>
-                    <span class="text-[0.65rem] font-black text-gray-400 bg-gray-100 px-2 py-1 rounded">10m</span>
-                </label>
-
-                <label class="flex items-center gap-4 p-3 rounded-xl border border-gray-200 hover:border-primary/40 hover:bg-primary/5 transition-all cursor-pointer group">
-                    <div class="relative flex items-center">
-                        <input type="checkbox" class="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary/50 transition-colors cursor-pointer accent-primary"/>
-                    </div>
-                    <div class="flex-1">
-                        <span class="block text-sm font-bold text-gray-800 group-hover:text-primary transition-colors">Diario de gratitud</span>
-                        <span class="block text-xs font-medium text-gray-500 mt-0.5">Escribir 3 cosas por las que estás agradecido</span>
-                    </div>
-                    <span class="text-[0.65rem] font-black text-gray-400 bg-gray-100 px-2 py-1 rounded">5m</span>
-                </label>
-
-                <label class="flex items-center gap-4 p-3 rounded-xl border border-gray-200 hover:border-primary/40 hover:bg-primary/5 transition-all cursor-pointer group">
-                    <div class="relative flex items-center">
-                        <input type="checkbox" checked class="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary/50 transition-colors cursor-pointer accent-primary"/>
-                    </div>
-                    <div class="flex-1">
-                        <span class="block text-sm font-bold text-gray-800 group-hover:text-primary transition-colors">Planificación</span>
-                        <span class="block text-xs font-medium text-gray-500 mt-0.5">Revisar agenda y prioridades del día</span>
-                    </div>
-                    <span class="text-[0.65rem] font-black text-gray-400 bg-gray-100 px-2 py-1 rounded">15m</span>
-                </label>
+            <div id="modal-tareas-container" class="space-y-3 overflow-y-auto pr-2 custom-scrollbar flex-1 -mr-2 mb-6">
+                <!-- Dynamic tasks will be injected here -->
             </div>
 
             <form action="{{ url_for('agregar_rutina_molde') }}" method="POST">
-                <input type="hidden" name="molde" value="manana_maestra">
+                <input type="hidden" name="rutina_id" id="modal-rutina-id" value="">
                 <div class="pt-4 border-t border-gray-100">
                     <button type="submit" class="w-full py-4 rounded-xl bg-primary text-white font-bold shadow-md shadow-primary/20 hover:bg-primary-hover hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 text-sm mb-3">
                         <span class="material-symbols-outlined text-[20px]">check_circle</span>
@@ -380,8 +143,41 @@
     </div>
     </div>
 
-    <!-- Script de Modales -->
     <script>
+        function openRoutineModal(rutina) {
+            document.getElementById('modal-titulo').innerText = rutina.nombre;
+            document.getElementById('modal-descripcion').innerText = rutina.descripcion;
+            document.getElementById('modal-icono').innerText = rutina.icono || 'routine';
+            document.getElementById('modal-tiempo').innerText = (rutina.tareas.length * 10) + ' Mins';
+            document.getElementById('modal-count').innerText = rutina.tareas.length + ' tareas seleccionadas';
+            document.getElementById('modal-rutina-id').value = rutina.id;
+
+            // Tasks list
+            const container = document.getElementById('modal-tareas-container');
+            container.innerHTML = '';
+            rutina.tareas.forEach(tarea => {
+                const label = document.createElement('label');
+                label.className = 'flex items-center gap-4 p-3 rounded-xl border border-gray-200 hover:border-primary/40 hover:bg-primary/5 transition-all cursor-pointer group';
+                label.innerHTML = `
+                    <div class="relative flex items-center">
+                        <input type="checkbox" checked disabled class="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary/50 transition-colors accent-primary"/>
+                    </div>
+                    <div class="flex-1">
+                        <span class="block text-sm font-bold text-gray-800 group-hover:text-primary transition-colors">${tarea.titulo}</span>
+                        <span class="block text-xs font-medium text-gray-500 mt-0.5">${tarea.descripcion || ''}</span>
+                    </div>
+                    <span class="text-[0.65rem] font-black text-gray-400 bg-gray-50 px-2 py-1 rounded">+${tarea.xp_recompensa} XP</span>
+                `;
+                container.appendChild(label);
+            });
+
+            // Theme color adjustment
+            const iconContainer = document.getElementById('modal-icon-container');
+            iconContainer.className = 'w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg text-white shrink-0 mt-1 bg-gradient-to-br from-primary to-indigo-600 shadow-primary/20';
+            
+            openModal('modal-detalle-rutina');
+        }
+
         function openModal(id) {
             const modal = document.getElementById(id);
             if (modal) {

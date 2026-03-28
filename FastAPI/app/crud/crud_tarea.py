@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from app.models.tarea import Tarea
 from app.schemas.tarea import TareaCreate, TareaUpdate
+from app.models.nivel import Nivel 
 
 def get_tarea(db: Session, tarea_id: int):
     return db.query(Tarea).filter(Tarea.id == tarea_id).first()
@@ -20,10 +21,43 @@ def crear_tarea(db: Session, tarea: TareaCreate):
 
 def actualizar_tarea(db: Session, db_tarea: Tarea, tarea_update: TareaUpdate):
     update_data = tarea_update.model_dump(exclude_unset=True)
+    
+    if "estado" in update_data:
+        nuevo_estado = update_data["estado"]
+        estado_anterior = db_tarea.estado
+        
+        if nuevo_estado == "completada" and estado_anterior != "completada":
+            if db_tarea.usuario:
+                db_tarea.usuario.xp_total += db_tarea.xp_recompensa
+                
+                nivel_alcanzado = db.query(Nivel).filter(
+                    Nivel.xp_requerida <= db_tarea.usuario.xp_total
+                ).order_by(Nivel.xp_requerida.desc()).first()
+                
+                if nivel_alcanzado:
+                    db_tarea.usuario.nivel_id = nivel_alcanzado.id
+        
+        elif nuevo_estado == "pendiente" and estado_anterior == "completada":
+            if db_tarea.usuario:
+                db_tarea.usuario.xp_total -= db_tarea.xp_recompensa
+                if db_tarea.usuario.xp_total < 0:
+                    db_tarea.usuario.xp_total = 0
+                
+                nivel_alcanzado = db.query(Nivel).filter(
+                    Nivel.xp_requerida <= db_tarea.usuario.xp_total
+                ).order_by(Nivel.xp_requerida.desc()).first()
+                
+                if nivel_alcanzado:
+                    db_tarea.usuario.nivel_id = nivel_alcanzado.id
+                else:
+                    db_tarea.usuario.nivel_id = None
+
     for key, value in update_data.items():
         setattr(db_tarea, key, value)
+        
     db.commit()
     db.refresh(db_tarea)
+    
     return db_tarea
 
 def eliminar_tarea(db: Session, tarea_id: int):

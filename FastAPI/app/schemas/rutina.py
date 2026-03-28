@@ -20,18 +20,26 @@ class RegistroRutinaResponse(RegistroRutinaBase):
 # --- Rutina Schemas ---
 class RutinaBase(BaseModel):
     nombre: str
+    descripcion: Optional[str] = None
+    icono: Optional[str] = None
+    color: Optional[str] = None
+    es_publica: Optional[bool] = False
     esta_activa: Optional[bool] = True
 
 class RutinaCreate(RutinaBase):
-    usuario_id: int
+    usuario_id: Optional[int] = None
 
 class RutinaUpdate(BaseModel):
     nombre: Optional[str] = None
+    descripcion: Optional[str] = None
+    icono: Optional[str] = None
+    color: Optional[str] = None
+    es_publica: Optional[bool] = None
     esta_activa: Optional[bool] = None
 
 class RutinaResponse(RutinaBase):
     id: int
-    usuario_id: int
+    usuario_id: Optional[int] = None
     # Permite incluir los registros hijos al pedir la rutina
     registros: List[RegistroRutinaResponse] = []
     tareas: List[TareaResponse] = []

@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, request, flash, session
 import requests
 import functools
+from datetime import datetime
 
 API_URL = "http://api:8000/api/v1"
 
@@ -14,6 +15,70 @@ def login_required(f):
             return redirect(url_for('login'))
         return f(*args, **kwargs)
     return decorated_function
+
+@app.template_filter('timeago')
+def timeago_filter(date_str):
+    if not date_str:
+        return ""
+    try:
+        # Pydantic returns ISO format e.g. "2026-03-27T12:00:00"
+        dt = datetime.fromisoformat(date_str.replace('Z', '+00:00'))
+        # Using naive utc for simpler diff calculation as MVP
+        dt = dt.replace(tzinfo=None)
+        now = datetime.utcnow()
+        diff = now - dt
+
+        seconds = diff.total_seconds()
+        if seconds < 60:
+            return "hace un momento"
+        elif seconds < 3600:
+            minutes = int(seconds / 60)
+            return f"hace {minutes}m"
+        elif seconds < 86400:
+            hours = int(seconds / 3600)
+            return f"hace {hours}h"
+        elif seconds < 172800:
+            return "ayer"
+        else:
+            days = int(seconds / 86400)
+            return f"hace {days}d"
+    except Exception as e:
+        return ""
+
+@app.context_processor
+def inject_user_stats():
+    if 'usuario_id' in session:
+        try:
+            uid = session['usuario_id']
+            # Obtener datos del usuario
+            res_user = requests.get(f'{API_URL}/usuarios/{uid}')
+            nav_user = None
+            if res_user.status_code == 200:
+                data = res_user.json()
+                nav_user = {
+                    'racha': data.get('racha_actual', 0),
+                    'xp': data.get('xp_total', 0),
+                    'nivel': data.get('nivel', {}).get('numero_nivel', 1) if data.get('nivel') else 1,
+                    'xp_requerida': data.get('nivel', {}).get('xp_requerida', 100) if data.get('nivel') else 100
+                }
+            
+            # Obtener notificaciones
+            res_notif = requests.get(f'{API_URL}/notificaciones/usuario/{uid}')
+            nav_notifs = []
+            no_leidas = 0
+            if res_notif.status_code == 200:
+                # Top 10 recents max in the global context
+                nav_notifs = res_notif.json()[:10]
+                no_leidas = sum(1 for n in nav_notifs if not n.get('leida', True))
+
+            return {
+                'nav_usuario': nav_user,
+                'nav_notificaciones': nav_notifs,
+                'nav_notif_no_leidas': no_leidas
+            }
+        except:
+            pass
+    return {'nav_usuario': None, 'nav_notificaciones': [], 'nav_notif_no_leidas': 0}
 
 @app.route('/')
 def index():
@@ -86,19 +151,10 @@ def inicio():
     rutinas = []
     usuario_id = session['usuario_id']
 
-    usuario_info = {
-        "nombre": session.get('nombre_usuario', 'Usuario'),
-        "nivel": 4,
-        "xp": 500,
-        "xp_siguiente": 1000,
-        "racha": 12
-    }
+    usuario_data = {"nombre": session.get('nombre_usuario', 'Puruhára'), "nivel": 1, "xp": 0, "xp_siguiente": 100, "racha": 0}
     
     try:
-        # Verificar y resetear racha si han pasado mas de 24h
         requests.post(f'{API_URL}/usuarios/{usuario_id}/check-streak')
-
-        # Fetch tasks and routines for specific user
         response_tareas = requests.get(f'{API_URL}/tareas/')
         if response_tareas.status_code == 200:
             todas_las_tareas = response_tareas.json()
@@ -111,13 +167,18 @@ def inicio():
         response_user = requests.get(f'{API_URL}/usuarios/{usuario_id}')
         if response_user.status_code == 200:
             u_data = response_user.json()
-            usuario_info['xp'] = u_data.get('xp_total', 0)
-            usuario_info['racha'] = u_data.get('racha_actual', 0)
+            
+            usuario_data['xp'] = u_data.get('xp_total', 0)
+            usuario_data['racha'] = u_data.get('racha_actual', 0)
+            
+            if u_data.get('nivel'):
+                usuario_data['nivel'] = u_data['nivel'].get('numero_nivel', 1)
+                usuario_data['xp_siguiente'] = u_data['nivel'].get('xp_requerida', 100)
 
     except Exception as e:
-        print(f"Error cargando desde FastAPI: {e}")
+        print(f"Jejavy FastAPI guive: {e}")
         
-    return render_template('/inicio/inicio.html', tareas=tareas, rutinas=rutinas, usuario=usuario_info)
+    return render_template('/inicio/inicio.html', tareas=tareas, rutinas=rutinas, usuario=usuario_data)
 
 @app.route('/crear-tarea', methods=['POST'])
 @login_required
@@ -246,52 +307,6 @@ def crear_rutina():
         
     return redirect(url_for('inicio'))
 
-@app.route('/agregar-rutina-molde', methods=['POST'])
-@login_required
-def agregar_rutina_molde():
-    molde = request.form.get('molde')
-    
-    if molde == 'manana_maestra':
-        rutina_payload = {
-            "nombre": "Mañana Maestra",
-            "usuario_id": session['usuario_id'],
-            "esta_activa": True
-        }
-        
-        try:
-            res_rut = requests.post(f'{API_URL}/rutinas/', json=rutina_payload)
-            if res_rut.status_code == 201:
-                rutina_id = res_rut.json().get('id')
-                
-                tareas_molde = [
-                    {"titulo": "Hidratación", "descripcion": "Beber 500ml de agua con limón", "xp_recompensa": 5},
-                    {"titulo": "Estiramiento", "descripcion": "Movilidad ligera para despertar el cuerpo", "xp_recompensa": 10},
-                    {"titulo": "Meditación", "descripcion": "Enfoque en la respiración y presencia", "xp_recompensa": 15},
-                    {"titulo": "Diario de gratitud", "descripcion": "Escribir 3 cosas por las que estás agradecido", "xp_recompensa": 5},
-                    {"titulo": "Planificación", "descripcion": "Revisar agenda y prioridades del día", "xp_recompensa": 15}
-                ]
-                
-                for t in tareas_molde:
-                    t_payload = {
-                        "titulo": t["titulo"],
-                        "descripcion": t["descripcion"],
-                        "usuario_id": session['usuario_id'],
-                        "es_critica": False,
-                        "xp_recompensa": t["xp_recompensa"],
-                        "estado": "pendiente",
-                        "rutina_id": rutina_id,
-                        "tags": "Hábito,Mañana"
-                    }
-                    requests.post(f'{API_URL}/tareas/', json=t_payload)
-                    
-                flash('¡Rutina "Mañana Maestra" añadida a tu día!', 'success')
-            else:
-                flash('Error al añadir la rutina desde la biblioteca.', 'error')
-        except Exception as e:
-            print(f"Error conectando a FastAPI: {e}")
-            flash('Error de conexión con el servidor.', 'error')
-            
-    return redirect(url_for('inicio'))
 
 @app.route('/eliminar-rutina/<int:rutina_id>', methods=['POST'])
 @login_required
@@ -337,7 +352,65 @@ def toggle_tarea(tarea_id):
 @app.route('/rutinas')
 @login_required
 def rutinas():
-    return render_template('/rutinas/rutinas.html')
+    rutinas_publicas = []
+    try:
+        response = requests.get(f'{API_URL}/rutinas/publicas')
+        if response.status_code == 200:
+            rutinas_publicas = response.json()
+    except Exception as e:
+        print(f"Error fetching public routines: {e}")
+        
+    return render_template('/rutinas/rutinas.html', rutinas=rutinas_publicas)
+
+@app.route('/agregar_rutina_molde', methods=['POST'])
+@login_required
+def agregar_rutina_molde():
+    rutina_id = request.form.get('rutina_id')
+    usuario_id = session.get('usuario_id')
+    
+    try:
+        # 1. Fetch the public routine template including its tasks
+        res = requests.get(f'{API_URL}/rutinas/{rutina_id}')
+        if res.status_code != 200:
+            flash('No se pudo encontrar la rutina seleccionada.', 'error')
+            return redirect(url_for('rutinas'))
+        
+        molde = res.json()
+        
+        # 2. Create the new user routine
+        nueva_rutina_payload = {
+            "nombre": molde['nombre'],
+            "usuario_id": usuario_id,
+            "esta_activa": True
+        }
+        res_rutina = requests.post(f'{API_URL}/rutinas/', json=nueva_rutina_payload)
+        
+        if res_rutina.status_code == 201:
+            nueva_rutina = res_rutina.json()
+            nueva_rutina_id = nueva_rutina['id']
+            
+            # 3. Clone each task from the template to the new routine
+            tareas_originales = molde.get('tareas', [])
+            for t in tareas_originales:
+                tarea_payload = {
+                    "titulo": t['titulo'],
+                    "descripcion": t['descripcion'],
+                    "usuario_id": usuario_id,
+                    "rutina_id": nueva_rutina_id,
+                    "xp_recompensa": t['xp_recompensa'],
+                    "estado": "pendiente"
+                }
+                requests.post(f'{API_URL}/tareas/', json=tarea_payload)
+            
+            flash(f'¡Genial! La rutina "{molde["nombre"]}" ha sido añadida a tu día.', 'success')
+        else:
+            flash('Hubo un problema al crear tu rutina personalizada.', 'error')
+            
+    except Exception as e:
+        print(f"Error cloning routine: {e}")
+        flash('Error de conexión con el servidor al procesar la rutina.', 'error')
+        
+    return redirect(url_for('inicio'))
 
 @app.route('/clasificacion')
 @login_required

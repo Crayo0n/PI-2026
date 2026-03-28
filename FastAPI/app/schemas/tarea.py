@@ -13,7 +13,7 @@ class TareaBase(BaseModel):
     rutina_id: Optional[int] = None
 
 class TareaCreate(TareaBase):
-    usuario_id: int
+    usuario_id: Optional[int] = None
 
 class TareaUpdate(BaseModel):
     titulo: Optional[str] = None
@@ -26,7 +26,7 @@ class TareaUpdate(BaseModel):
 
 class TareaResponse(TareaBase):
     id: int
-    usuario_id: int
+    usuario_id: Optional[int] = None
 
     class Config:
         from_attributes = True

@@ -14,6 +14,10 @@ router = APIRouter()
 def create_rutina(rutina: RutinaCreate, db: Session = Depends(get_db)):
     return crud_rutina.crear_rutina(db=db, rutina=rutina)
 
+@router.get("/publicas", response_model=List[RutinaResponse])
+def read_rutinas_publicas(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    return crud_rutina.get_rutinas_publicas(db, skip=skip, limit=limit)
+
 @router.get("/usuario/{usuario_id}", response_model=List[RutinaResponse])
 def read_rutinas_by_usuario(usuario_id: int, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return crud_rutina.get_rutinas_by_usuario(db, usuario_id=usuario_id, skip=skip, limit=limit)
