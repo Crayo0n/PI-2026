@@ -83,8 +83,7 @@
                         <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="8">
                         </circle>
                         <circle cx="50" cy="50" r="45" fill="none" stroke="#f97316" stroke-width="8"
-                            stroke-dasharray="283" stroke-dashoffset="{{ stroke_offset }}"
-                            stroke-linecap="round"
+                            stroke-dasharray="283" stroke-dashoffset="{{ stroke_offset }}" stroke-linecap="round"
                             class="transition-all duration-1000 origin-center scale-95"></circle>
                     </svg>
                     <div class="absolute inset-0 flex flex-col items-center justify-center">
@@ -217,7 +216,7 @@
                 class="filter-btn px-3 py-1.5 text-gray-600 hover:text-gray-900 text-xs font-bold transition-colors">Pendientes</button>
             <div class="w-px h-4 bg-gray-300 mx-2"></div>
             <button onclick="filterFeed('alta', this)"
-                class="filter-btn px-3 py-1.5 text-gray-600 hover:text-gray-900 text-xs font-bold transition-colors">Alta</button>
+                class="filter-btn px-3 py-1.5 text-gray-600 hover:text-gray-900 text-xs font-bold transition-colors">Crítica</button>
             <div class="w-px h-4 bg-gray-300 mx-2"></div>
             <button onclick="filterFeed('media', this)"
                 class="filter-btn px-3 py-1.5 text-gray-600 hover:text-gray-900 text-xs font-bold transition-colors">Media</button>
@@ -321,6 +320,102 @@
 
 </div>
 
+<style>
+    /* CSS Standard avoids issues with Tailwind CDN @apply */
+    .priority-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 0.75rem;
+        border-radius: 1rem;
+        border: 2px solid #f3f4f6;
+        /* gray-100 */
+        background-color: #f9fafb;
+        /* gray-50 */
+        color: #9ca3af;
+        /* gray-400 */
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .priority-card:hover {
+        border-color: #e5e7eb;
+        /* gray-200 */
+        background-color: #f3f4f6;
+        /* gray-100 */
+    }
+
+    /* Active States */
+    .priority-card.active {
+        border-color: currentColor;
+        background-color: rgba(var(--current-rgb), 0.05);
+        /* Needs helper or just specific child colors */
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        transform: scale(1.02);
+    }
+
+    /* Specific colors for active states */
+    .priority-card[data-level="baja"].active {
+        color: #c084fc !important;
+        background-color: #faf5ff !important;
+        border-color: #c084fc !important;
+    }
+
+    .priority-card[data-level="media"].active {
+        color: #3b82f6 !important;
+        background-color: #eff6ff !important;
+        border-color: #3b82f6 !important;
+    }
+
+    .priority-card[data-level="alta"].active {
+        color: #f97316 !important;
+        background-color: #fff7ed !important;
+        border-color: #f97316 !important;
+    }
+
+    .priority-card[data-level="critica"].active {
+        color: #dc2626 !important;
+        background-color: #fef2f2 !important;
+        border-color: #dc2626 !important;
+    }
+
+    .priority-dot {
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 9999px;
+        margin-bottom: 0.5rem;
+    }
+</style>
+
+<script>
+    function selectPriority(level, value, modalType) {
+        const containerId = `${modalType}-priority-container`;
+        const hiddenInputId = `${modalType}-prioridad-input`;
+        const container = document.getElementById(containerId);
+        const hiddenInput = document.getElementById(hiddenInputId);
+
+        if (!container || !hiddenInput) {
+            console.error('Modal priority elements not found:', { containerId, hiddenInputId });
+            return;
+        }
+
+        // Update hidden input
+        hiddenInput.value = value;
+
+        // Update visual state
+        const cards = container.querySelectorAll('.priority-card');
+        cards.forEach(card => {
+            card.classList.remove('active');
+            if (card.dataset.level === level) {
+                card.classList.add('active');
+            }
+        });
+    }
+</script>
+
 
 <div id="modal-add" class="fixed inset-0 z-50 items-center justify-center p-4 sm:p-6 hidden">
 
@@ -336,17 +431,6 @@
             <div class="flex items-center gap-2 text-gray-900">
                 <span class="material-symbols-outlined text-primary font-bold text-[24px]">add</span>
                 <h2 class="text-xl font-black">Añadir Tarea</h2>
-            </div>
-
-            <div class="flex items-center gap-3 bg-gray-50 px-3 py-1.5 rounded-full border border-gray-200">
-                <span class="text-[0.65rem] font-bold text-gray-500 uppercase tracking-wider">Utilizar IA</span>
-                <label class="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" class="sr-only peer">
-                    <div
-                        class="w-8 h-4 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-primary">
-                    </div>
-                </label>
-                <span class="material-symbols-outlined text-gray-400 text-[18px]">smart_toy</span>
             </div>
         </div>
 
@@ -375,16 +459,37 @@
                 </div>
 
                 <div>
-                    <div class="flex justify-between items-center mb-4">
-                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Prioridad</label>
-                        <span class="text-[0.65rem] font-bold text-primary">Bajo - Alto</span>
-                    </div>
-                    <div class="px-2 mt-6 relative">
-                        <input name="prioridad" type="range" min="1" max="100" value="70"
-                            class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary relative z-10">
-                        <div class="flex justify-between mt-2 px-1">
-                            <span class="text-[0.6rem] font-bold text-gray-400 uppercase">Bajo</span>
-                            <span class="text-[0.6rem] font-bold text-primary uppercase">Alto</span>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-4">Nivel de
+                        Prioridad</label>
+                    <input type="hidden" name="prioridad" id="add-prioridad-input" value="40">
+                    <div id="add-priority-container" class="grid grid-cols-4 gap-3">
+                        <!-- Baja -->
+                        <div onclick="selectPriority('baja', '10', 'add')" data-level="baja"
+                            class="priority-card text-purple-400">
+                            <div class="priority-dot bg-purple-400"></div>
+                            <span class="text-[0.65rem] font-black uppercase">Baja</span>
+                            <span class="text-[0.55rem] font-bold opacity-60">+10 XP</span>
+                        </div>
+                        <!-- Media -->
+                        <div onclick="selectPriority('media', '40', 'add')" data-level="media"
+                            class="priority-card active text-blue-500">
+                            <div class="priority-dot bg-blue-500"></div>
+                            <span class="text-[0.65rem] font-black uppercase">Media</span>
+                            <span class="text-[0.55rem] font-bold opacity-60">+40 XP</span>
+                        </div>
+                        <!-- Alta -->
+                        <div onclick="selectPriority('alta', '70', 'add')" data-level="alta"
+                            class="priority-card text-orange-500">
+                            <div class="priority-dot bg-orange-500"></div>
+                            <span class="text-[0.65rem] font-black uppercase">Alta</span>
+                            <span class="text-[0.55rem] font-bold opacity-60">+70 XP</span>
+                        </div>
+                        <!-- Crítica -->
+                        <div onclick="selectPriority('critica', '100', 'add')" data-level="critica"
+                            class="priority-card text-red-600">
+                            <div class="priority-dot bg-red-600 animate-pulse"></div>
+                            <span class="text-[0.65rem] font-black uppercase">Crítica</span>
+                            <span class="text-[0.55rem] font-bold opacity-60">+100 XP</span>
                         </div>
                     </div>
                 </div>
@@ -435,17 +540,6 @@
                 <span class="material-symbols-outlined text-primary font-bold text-[24px]">edit_square</span>
                 <h2 class="text-xl font-black">Actualizar Tarea</h2>
             </div>
-
-            <div class="flex items-center gap-3 bg-gray-50 px-3 py-1.5 rounded-full border border-gray-200">
-                <span class="text-[0.65rem] font-bold text-gray-500 uppercase tracking-wider">Utilizar IA</span>
-                <label class="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" class="sr-only peer" checked>
-                    <div
-                        class="w-8 h-4 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-primary">
-                    </div>
-                </label>
-                <span class="material-symbols-outlined text-primary text-[18px]">smart_toy</span>
-            </div>
         </div>
 
         <div class="p-6 sm:p-8 space-y-6 overflow-y-auto">
@@ -473,16 +567,37 @@
                 </div>
 
                 <div>
-                    <div class="flex justify-between items-center mb-4">
-                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Prioridad</label>
-                        <span class="text-[0.65rem] font-bold text-red-500">Alta</span>
-                    </div>
-                    <div class="px-2 mt-6 relative">
-                        <input id="edit-prioridad" name="prioridad" type="range" min="1" max="100"
-                            class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-red-500 relative z-10">
-                        <div class="flex justify-between mt-2 px-1">
-                            <span class="text-[0.6rem] font-bold text-gray-400 uppercase">Bajo</span>
-                            <span class="text-[0.6rem] font-bold text-red-500 uppercase">Alto</span>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-4">Nivel de
+                        Prioridad</label>
+                    <input type="hidden" name="prioridad" id="edit-prioridad-input" value="40">
+                    <div id="edit-priority-container" class="grid grid-cols-4 gap-3">
+                        <!-- Baja -->
+                        <div onclick="selectPriority('baja', '10', 'edit')" data-level="baja"
+                            class="priority-card text-purple-400">
+                            <div class="priority-dot bg-purple-400"></div>
+                            <span class="text-[0.65rem] font-black uppercase">Baja</span>
+                            <span class="text-[0.55rem] font-bold opacity-60">+10 XP</span>
+                        </div>
+                        <!-- Media -->
+                        <div onclick="selectPriority('media', '40', 'edit')" data-level="media"
+                            class="priority-card text-blue-500">
+                            <div class="priority-dot bg-blue-500"></div>
+                            <span class="text-[0.65rem] font-black uppercase">Media</span>
+                            <span class="text-[0.55rem] font-bold opacity-60">+40 XP</span>
+                        </div>
+                        <!-- Alta -->
+                        <div onclick="selectPriority('alta', '70', 'edit')" data-level="alta"
+                            class="priority-card text-orange-500">
+                            <div class="priority-dot bg-orange-500"></div>
+                            <span class="text-[0.65rem] font-black uppercase">Alta</span>
+                            <span class="text-[0.55rem] font-bold opacity-60">+70 XP</span>
+                        </div>
+                        <!-- Crítica -->
+                        <div onclick="selectPriority('critica', '100', 'edit')" data-level="critica"
+                            class="priority-card text-red-600">
+                            <div class="priority-dot bg-red-600 animate-pulse"></div>
+                            <span class="text-[0.65rem] font-black uppercase">Crítica</span>
+                            <span class="text-[0.55rem] font-bold opacity-60">+100 XP</span>
                         </div>
                     </div>
                 </div>
@@ -526,6 +641,55 @@
         </div>
     </form>
 </div>
+
+<div id="modal-eliminar" class="fixed inset-0 z-50 items-center justify-center p-4 sm:p-6 hidden">
+        
+        <div class="absolute inset-0 bg-gray-900/40 backdrop-blur-sm transition-opacity" onclick="closeModal('modal-eliminar')"></div>
+
+        <form id="delete-form" method="POST" class="relative bg-white rounded-3xl shadow-2xl w-full max-w-md p-6 sm:p-8 flex flex-col gap-6 animate-fade-in-up">
+        <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-md flex flex-col overflow-hidden animate-fade-in-up">
+            
+            <button onclick="closeModal('modal-eliminar')" type="button" class="absolute top-6 right-6 text-gray-400 hover:text-gray-600 transition-colors">
+                <span class="material-symbols-outlined text-[20px]">close</span>
+            </button>
+
+            <div class="flex items-center gap-3 p-6 sm:px-8 pb-0">
+                <div class="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center flex-shrink-0">
+                    <span class="material-symbols-outlined text-red-500 text-[22px]">warning</span>
+                </div>
+                <h2 class="text-xl font-black text-gray-900">¿Eliminar tarea?</h2>
+            </div>
+
+            <p class="text-sm font-medium text-gray-500 leading-relaxed p-6 sm:px-8 pt-2">
+                ¿Estás seguro de que quieres eliminar esta tarea? Esta acción no se puede deshacer.
+            </p>
+
+            <div class="border border-gray-100 bg-gray-50 rounded-xl p-4 flex gap-3 items-start relative overflow-hidden mx-6 sm:mx-8">
+                <div class="w-1 absolute left-0 top-0 bottom-0 bg-red-400"></div>
+                <div class="mt-0.5 ml-1">
+                    <span class="material-symbols-outlined text-gray-400 text-[18px]">tab_close</span>
+                </div>
+                <div>
+                    <h4 id="delete-tarea-titulo" class="text-sm font-bold text-gray-900 mb-1">Nombre de la Tarea</h4>
+                    <div class="flex items-center gap-2">
+                        <span class="px-2 py-0.5 bg-red-50 text-red-500 text-[0.65rem] font-bold rounded-full">Borrando</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 sm:p-8 bg-gray-50/50 flex justify-end gap-3 border-t border-gray-100">
+                <button type="button" onclick="closeModal('modal-eliminar')" class="px-5 py-2.5 rounded-xl text-sm font-bold text-gray-500 hover:text-gray-800 hover:bg-gray-100 transition-colors">
+                    Cancelar
+                </button>
+                <form id="delete-form" action="" method="POST" class="m-0">
+                    <button type="submit" class="px-5 py-2.5 bg-red-500 text-white rounded-xl text-sm font-bold hover:bg-red-600 shadow-md shadow-red-500/20 transition-all flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[18px]">delete_forever</span>
+                        Estoy seguro, eliminar
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
 
 
 <div id="modal-add-rutina" class="fixed inset-0 z-50 items-center justify-center p-4 sm:p-6 hidden">
@@ -679,9 +843,19 @@
         } else {
             document.getElementById('edit-fecha').value = '';
         }
+
+        // Set priority level in Edit Modal
+        let pLevel = 'media';
+        let pValue = '40';
         if (xp) {
-            document.getElementById('edit-prioridad').value = xp;
+            const xpVal = parseInt(xp);
+            if (xpVal >= 90) { pLevel = 'critica'; pValue = '100'; }
+            else if (xpVal >= 60) { pLevel = 'alta'; pValue = '70'; }
+            else if (xpVal >= 30) { pLevel = 'media'; pValue = '40'; }
+            else { pLevel = 'baja'; pValue = '10'; }
         }
+        selectPriority(pLevel, pValue, 'edit');
+
         openModal('modal-edit');
     }
 
@@ -757,6 +931,7 @@
     // Nueva lógica para Rutinas
     function openModalAdd() {
         document.getElementById('hidden-add-rutina-id').value = '';
+        selectPriority('media', '40', 'add');
         openModal('modal-add');
     }
 

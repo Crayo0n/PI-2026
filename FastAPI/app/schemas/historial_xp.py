@@ -15,3 +15,7 @@ class HistorialXpResponse(HistorialXpBase):
 
     class Config:
         from_attributes = True
+
+class HeatmapItem(BaseModel):
+    fecha: str
+    xp: int

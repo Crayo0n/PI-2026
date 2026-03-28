@@ -8,6 +8,27 @@ API_URL = "http://api:8000/api/v1"
 app = Flask(__name__)
 app.secret_key = 'priority_pulse_mvp_secure_key'
 
+import os
+import glob
+from werkzeug.utils import secure_filename
+
+AVATARS_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', 'images', 'avatars')
+os.makedirs(AVATARS_FOLDER, exist_ok=True)
+
+@app.context_processor
+def avatar_processor():
+    def get_avatar_url(uid):
+        if not uid:
+            return url_for('static', filename='images/avatar.png')
+        patron = os.path.join(AVATARS_FOLDER, f"avatar_{uid}.*")
+        coincidencias = glob.glob(patron)
+        if coincidencias:
+            archivo = os.path.basename(coincidencias[0])
+            # Generar un hash temporal a partir del tiempo del archivo base para vencer al cache
+            t = int(os.path.getmtime(coincidencias[0]))
+            return url_for('static', filename=f'images/avatars/{archivo}') + f"?v={t}"
+        return url_for('static', filename='images/avatar.png')
+    return dict(get_avatar_url=get_avatar_url)
 def login_required(f):
     @functools.wraps(f)
     def decorated_function(*args, **kwargs):
@@ -56,6 +77,7 @@ def inject_user_stats():
             if res_user.status_code == 200:
                 data = res_user.json()
                 nav_user = {
+                    'id': uid,
                     'nombre': data.get('nombre_usuario', session.get('nombre_usuario', 'Puruhára')),
                     'racha': data.get('racha_actual', 0),
                     'xp': data.get('xp_total', 0),
@@ -191,6 +213,7 @@ def perfil():
         "total_tareas": 0,
         "miembro_desde": "Recientemente"
     }
+    heatmap_grid = []
     
     try:
         response_user = requests.get(f'{API_URL}/usuarios/{usuario_id}')
@@ -211,10 +234,38 @@ def perfil():
             todas_las_tareas = response_tareas.json()
             stats['total_tareas'] = len(todas_las_tareas)
             
+        # Peticion del Heatmap al Backend
+        try:
+            from datetime import timedelta, datetime as dt
+            res_heatmap = requests.get(f'{API_URL}/historiales_xp/usuario/{usuario_id}/heatmap?dias=210')
+            if res_heatmap.status_code == 200:
+                data_heatmap = res_heatmap.json()
+                mapa_fechas = {item['fecha']: item['xp'] for item in data_heatmap}
+                
+                hoy = dt.utcnow().date()
+                for i in range(209, -1, -1):
+                    dia = hoy - timedelta(days=i)
+                    fecha_str = dia.strftime("%Y-%m-%d")
+                    xp = mapa_fechas.get(fecha_str, 0)
+                    
+                    if xp == 0: nivel = 0
+                    elif xp <= 50: nivel = 1
+                    elif xp <= 150: nivel = 2
+                    elif xp <= 300: nivel = 3
+                    else: nivel = 4
+                        
+                    heatmap_grid.append({
+                        'fecha': fecha_str,
+                        'xp': xp,
+                        'nivel': nivel
+                    })
+        except Exception as e:
+            print(f"Error procesando Heatmap: {e}")
+            
     except Exception as e:
         print(f"Error cargando perfil: {e}")
 
-    return render_template('/perfil/perfil.html', stats=stats)
+    return render_template('/perfil/perfil.html', stats=stats, heatmap_grid=heatmap_grid)
 
 
 @app.route('/crear-tarea', methods=['POST'])
@@ -467,25 +518,85 @@ def editar_perfil():
     if request.method == 'POST':
         nombre_usuario = request.form.get('nombre_usuario')
         correo = request.form.get('correo')
+        
+        # Procesamiento de Foto de Perfil
+        if 'foto_perfil' in request.files:
+            foto = request.files['foto_perfil']
+            if foto and foto.filename:
+                viejos = glob.glob(os.path.join(AVATARS_FOLDER, f"avatar_{session['usuario_id']}.*"))
+                for v in viejos:
+                    try: os.remove(v)
+                    except: pass
+                
+                ext = secure_filename(foto.filename).rsplit('.', 1)[-1].lower() if '.' in foto.filename else 'png'
+                nuevo_nombre = f"avatar_{session['usuario_id']}.{ext}"
+                foto.save(os.path.join(AVATARS_FOLDER, nuevo_nombre))
+
         payload = {"nombre_usuario": nombre_usuario, "correo": correo}
         try:
             res = requests.put(f'{API_URL}/usuarios/{session["usuario_id"]}', json=payload)
             if res.status_code == 200:
+                session['nombre_usuario'] = nombre_usuario
                 flash('Perfil actualizado con éxito.', 'success')
             else:
                 flash('No se pudo actualizar el perfil.', 'error')
         except Exception as e:
             flash('Error de conexión con el servidor.', 'error')
-        return redirect(url_for('perfil'))
+        return redirect(url_for('editar_perfil'))
     else:
         usuario = {}
         try:
             res = requests.get(f'{API_URL}/usuarios/{session["usuario_id"]}')
             if res.status_code == 200:
                 usuario = res.json()
-        except Exception as e:
-            print(f"Error conectando a FastAPI: {e}")
+        except:
+            pass
         return render_template('/perfil/editar.html', usuario=usuario)
+
+@app.route('/cambiar-password', methods=['POST'])
+@login_required
+def cambiar_password():
+    password_actual = request.form.get('password_actual')
+    nueva_password = request.form.get('nueva_password')
+    confirmacion = request.form.get('confirmacion_password')
+
+    if nueva_password != confirmacion:
+        flash('Las contraseñas nuevas no coinciden.', 'warning')
+        return redirect(url_for('editar_perfil'))
+
+    payload = {
+        "password_actual": password_actual,
+        "nueva_password": nueva_password
+    }
+    
+    try:
+        res = requests.put(f'{API_URL}/usuarios/{session["usuario_id"]}/password', json=payload)
+        if res.status_code == 200:
+            flash('Contraseña actualizada correctamente.', 'success')
+            return redirect(url_for('perfil'))
+        else:
+            flash(res.json().get('detail', 'Error al actualizar contraseña.'), 'error')
+    except Exception as e:
+        flash('Error de conexión con el servidor.', 'error')
+
+    return redirect(url_for('editar_perfil'))
+
+@app.route('/eliminar-cuenta', methods=['POST'])
+@login_required
+def eliminar_cuenta():
+    try:
+        res = requests.delete(f'{API_URL}/usuarios/{session["usuario_id"]}')
+        if res.status_code == 200:
+            session.clear()
+            flash('Tu cuenta ha sido eliminada permanentemente.', 'success')
+            return redirect(url_for('login'))
+        else:
+            flash('Hubo un problema al intentar eliminar tu cuenta.', 'error')
+            return redirect(url_for('editar_perfil'))
+    except Exception as e:
+        flash('Error de conexión con el servidor.', 'error')
+        return redirect(url_for('editar_perfil'))
+
 
 @app.route('/ajustes-notificaciones')
 @login_required

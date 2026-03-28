@@ -1,4 +1,6 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import func, cast, Date
+from datetime import datetime, timedelta
 from app.models.historial_xp import HistorialXp
 from app.schemas.historial_xp import HistorialXpCreate
 
@@ -16,3 +18,19 @@ def crear_registro_xp(db: Session, registro_xp: HistorialXpCreate):
     db.commit()
     db.refresh(db_registro)
     return db_registro
+
+def get_heatmap_actividad(db: Session, usuario_id: int, dias: int = 210):
+    fecha_limite = datetime.utcnow() - timedelta(days=dias)
+    resultados = db.query(
+        cast(HistorialXp.fecha, Date).label('fecha'),
+        func.sum(HistorialXp.cantidad_xp).label('xp')
+    ).filter(
+        HistorialXp.usuario_id == usuario_id,
+        HistorialXp.fecha >= fecha_limite
+    ).group_by(
+        cast(HistorialXp.fecha, Date)
+    ).order_by(
+        cast(HistorialXp.fecha, Date).asc()
+    ).all()
+
+    return [{"fecha": str(r.fecha), "xp": r.xp} for r in resultados]

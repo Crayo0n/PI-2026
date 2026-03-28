@@ -73,9 +73,11 @@
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
                         <div>
                             <h3 class="flex items-center gap-2 text-lg font-black text-gray-900">
-                                <span class="material-symbols-outlined text-primary">calendar_month</span> Actividad (Demo Visual)
+                                <span class="material-symbols-outlined text-primary">calendar_month</span> Actividad
+                                (Demo Visual)
                             </h3>
-                            <p class="text-[0.65rem] font-bold text-gray-400 mt-1">{{ stats.total_tareas }} tareas acumuladas en tu historial</p>
+                            <p class="text-[0.65rem] font-bold text-gray-400 mt-1">{{ stats.total_tareas }} tareas
+                                acumuladas en tu historial</p>
                         </div>
                         <div class="flex items-center gap-2 text-[0.65rem] font-bold text-gray-400">
                             <span>Menos</span>
@@ -98,7 +100,15 @@
                             </div>
                             <!-- Matriz de cuadritos dinámica -->
                             <div class="flex-1 grid grid-rows-5 grid-flow-col gap-[4px]" id="github-calendar">
-                                <!-- Reemplazado vía Script abajo -->
+                                {% for day in heatmap_grid %}
+                                    {% set bg_class = 'bg-gray-100' %}
+                                    {% if day.nivel == 1 %}{% set bg_class = 'bg-primary/20 hover:ring-primary/50' %}{% endif %}
+                                    {% if day.nivel == 2 %}{% set bg_class = 'bg-primary/40 hover:ring-primary/50' %}{% endif %}
+                                    {% if day.nivel == 3 %}{% set bg_class = 'bg-primary/60 hover:ring-primary/50' %}{% endif %}
+                                    {% if day.nivel == 4 %}{% set bg_class = 'bg-primary hover:ring-primary/50' %}{% endif %}
+                                    <div class="w-[12px] h-[12px] rounded-[3px] {{ bg_class }} transition-all" 
+                                         title="{{ day.fecha }}: {{ day.xp }} XP."></div>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
@@ -203,7 +213,8 @@
                                 <span class="material-symbols-outlined text-[18px]">workspace_premium</span>
                             </div>
                             <div>
-                                <p class="text-[0.55rem] font-bold text-gray-400 uppercase tracking-widest mb-0.5">XP Acumulada
+                                <p class="text-[0.55rem] font-bold text-gray-400 uppercase tracking-widest mb-0.5">XP
+                                    Acumulada
                                     Total</p>
                                 <p class="text-lg font-black text-gray-900 leading-none">{{ nav_usuario.xp_total }}</p>
                             </div>
@@ -331,16 +342,20 @@
                     </svg>
                     <div class="flex flex-col items-center z-10">
                         <span class="text-3xl font-black text-gray-900 leading-none">{{ nav_usuario.nivel }}</span>
-                        <span class="text-[0.6rem] font-bold text-gray-400 uppercase tracking-widest">Nivel Actual</span>
+                        <span class="text-[0.6rem] font-bold text-gray-400 uppercase tracking-widest">Nivel
+                            Actual</span>
                     </div>
                 </div>
 
                 <h3 class="text-lg font-black text-gray-900 mb-1">Tu Progreso</h3>
-                <p class="text-sm font-black text-primary mb-2">{{ nav_usuario.xp_total }} / {{ nav_usuario.xp_siguiente }} XP</p>
-                <p class="text-[0.65rem] font-bold text-gray-400 uppercase tracking-wide mb-4">Sigue completando tareas</p>
+                <p class="text-sm font-black text-primary mb-2">{{ nav_usuario.xp_total }} / {{ nav_usuario.xp_siguiente
+                    }} XP</p>
+                <p class="text-[0.65rem] font-bold text-gray-400 uppercase tracking-wide mb-4">Sigue completando tareas
+                </p>
 
                 <div class="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-                    <div class="h-full bg-gradient-to-r from-blue-500 to-primary rounded-full transition-all duration-1000" style="width: {{ (nav_usuario.xp / nav_usuario.xp_siguiente * 100)|round|int }}%"></div>
+                    <div class="h-full bg-gradient-to-r from-blue-500 to-primary rounded-full transition-all duration-1000"
+                        style="width: {{ (nav_usuario.xp / nav_usuario.xp_siguiente * 100)|round|int }}%"></div>
                 </div>
             </div>
 
@@ -464,19 +479,6 @@
 </div>
 <!-- Script de Modales y Utilidades -->
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const cal = document.getElementById("github-calendar");
-        if (cal) {
-            const classes = ['bg-gray-100', 'bg-primary/20', 'bg-primary/40', 'bg-primary/60', 'bg-primary'];
-            // Generamos aprox 200 cuadritos
-            for (let i = 0; i < 210; i++) {
-                const div = document.createElement("div");
-                div.className = "w-[12px] h-[12px] rounded-[3px] cursor-pointer hover:ring-2 hover:ring-primary/50 transition-all " + classes[Math.floor(Math.random() * classes.length)];
-                cal.appendChild(div);
-            }
-        }
-    });
-
     function switchTab(tab) {
         const tabActividad = document.getElementById('tab-actividad');
         const tabLogros = document.getElementById('tab-logros');

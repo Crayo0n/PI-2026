@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from app.db.database import get_db
-from app.schemas.historial_xp import HistorialXpCreate, HistorialXpResponse
+from app.schemas.historial_xp import HistorialXpCreate, HistorialXpResponse, HeatmapItem
 from app.crud import crud_historial_xp
 
 router = APIRouter()
@@ -23,3 +23,7 @@ def read_historial(historial_id: int, db: Session = Depends(get_db)):
     if db_historial is None:
         raise HTTPException(status_code=404, detail="Registro de XP no encontrado")
     return db_historial
+
+@router.get("/usuario/{usuario_id}/heatmap", response_model=List[HeatmapItem])
+def get_user_heatmap(usuario_id: int, dias: int = 210, db: Session = Depends(get_db)):
+    return crud_historial_xp.get_heatmap_actividad(db, usuario_id=usuario_id, dias=dias)

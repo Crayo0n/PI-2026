@@ -9,3 +9,10 @@ class Amistad(Base):
     usuario_id_1: Mapped[int] = mapped_column(ForeignKey("usuarios.id"))
     usuario_id_2: Mapped[int] = mapped_column(ForeignKey("usuarios.id"))
     estado: Mapped[str] = mapped_column(String, default="pendiente")
+
+    usuario_1: Mapped["Usuario"] = relationship(
+        "Usuario", foreign_keys=[usuario_id_1], back_populates="amistades_enviadas"
+    )
+    usuario_2: Mapped["Usuario"] = relationship(
+        "Usuario", foreign_keys=[usuario_id_2], back_populates="amistades_recibidas"
+    )

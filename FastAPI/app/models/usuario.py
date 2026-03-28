@@ -19,16 +19,16 @@ class Usuario(Base):
     zona_horaria: Mapped[str] = mapped_column(String, default="UTC")
 
     nivel: Mapped[Optional["Nivel"]] = relationship("Nivel", back_populates="usuarios")
-    tareas: Mapped[List["Tarea"]] = relationship("Tarea", back_populates="usuario")
-    rutinas: Mapped[List["Rutina"]] = relationship("Rutina", back_populates="usuario")
-    usuario_medallas: Mapped[List["UsuarioMedalla"]] = relationship("UsuarioMedalla", back_populates="usuario")
-    notificaciones: Mapped[List["Notificacion"]] = relationship("Notificacion", back_populates="usuario")
-    historial_xp: Mapped[List["HistorialXp"]] = relationship("HistorialXp", back_populates="usuario")
+    tareas: Mapped[List["Tarea"]] = relationship("Tarea", back_populates="usuario", cascade="all, delete-orphan")
+    rutinas: Mapped[List["Rutina"]] = relationship("Rutina", back_populates="usuario", cascade="all, delete-orphan")
+    usuario_medallas: Mapped[List["UsuarioMedalla"]] = relationship("UsuarioMedalla", back_populates="usuario", cascade="all, delete-orphan")
+    notificaciones: Mapped[List["Notificacion"]] = relationship("Notificacion", back_populates="usuario", cascade="all, delete-orphan")
+    historial_xp: Mapped[List["HistorialXp"]] = relationship("HistorialXp", back_populates="usuario", cascade="all, delete-orphan")
     
     # Amistades
     amistades_enviadas: Mapped[List["Amistad"]] = relationship(
-        "Amistad", foreign_keys="[Amistad.usuario_id_1]", back_populates="usuario_1"
+        "Amistad", foreign_keys="[Amistad.usuario_id_1]", back_populates="usuario_1", cascade="all, delete-orphan"
     )
     amistades_recibidas: Mapped[List["Amistad"]] = relationship(
-        "Amistad", foreign_keys="[Amistad.usuario_id_2]", back_populates="usuario_2"
+        "Amistad", foreign_keys="[Amistad.usuario_id_2]", back_populates="usuario_2", cascade="all, delete-orphan"
     )

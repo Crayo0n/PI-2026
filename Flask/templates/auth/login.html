@@ -5,7 +5,26 @@
 {% block subheading %}Ingresa tus credenciales para acceder a tu panel.{% endblock %}
 
 {% block form_content %}
-<form action="/login" method="POST" class="flex flex-col gap-5">
+<!-- Alertas de Servidor -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="mb-6 space-y-3">
+      {% for category, message in messages %}
+        <div class="flex items-center gap-3 p-4 rounded-2xl bg-red-50 border border-red-100/50 shadow-sm animate-all duration-300 entrance-animation">
+          <div class="flex-shrink-0 w-8 h-8 rounded-full bg-red-500/10 flex items-center justify-center">
+            <span class="material-symbols-outlined text-red-600 text-[20px]">error</span>
+          </div>
+          <div class="flex-1">
+            <p class="text-[0.75rem] font-bold text-red-900 uppercase tracking-tight">Error de Autenticación</p>
+            <p class="text-[0.85rem] font-medium text-red-700/80">{{ message }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<form action="/login" method="POST" id="loginForm" novalidate class="flex flex-col gap-5">
     
     <div class="grid grid-cols-2 gap-4">
         <button type="button" class="flex items-center justify-center gap-2 py-2.5 px-4 bg-gray-50 border border-gray-200 rounded-xl hover:bg-gray-100 transition-colors group">
@@ -26,11 +45,12 @@
         <div class="flex flex-col gap-1.5">
             <label class="text-xs font-bold text-gray-700 uppercase tracking-wider" for="email">Correo Electrónico</label>
             <div class="relative group">
-                <input type="email" id="email" name="email" placeholder="ejemplo@correo.com" required class="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm font-medium rounded-xl focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary block p-3.5 pl-11 transition-all"/>
+                <input type="email" id="email" name="email" placeholder="ejemplo@correo.com" class="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm font-medium rounded-xl focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary block p-3.5 pl-11 transition-all"/>
                 <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
                     <span class="material-symbols-outlined text-gray-400 text-[20px] group-focus-within:text-primary transition-colors">mail</span>
                 </div>
             </div>
+            <p id="emailError" class="text-[10px] font-bold text-red-500 uppercase tracking-tight hidden">Por favor ingresa un correo válido</p>
         </div>
 
         <div class="flex flex-col gap-1.5">
@@ -39,7 +59,7 @@
                 <a class="text-[0.65rem] font-bold text-primary hover:text-primary-hover transition-colors" href="#">¿Olvidaste tu contraseña?</a>
             </div>
             <div class="relative group">
-                <input type="password" id="password" name="password" placeholder="••••••••" required class="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm font-medium rounded-xl focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary block p-3.5 pl-11 transition-all"/>
+                <input type="password" id="password" name="password" placeholder="••••••••" class="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm font-medium rounded-xl focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary block p-3.5 pl-11 transition-all"/>
                 <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
                     <span class="material-symbols-outlined text-gray-400 text-[20px] group-focus-within:text-primary transition-colors">lock</span>
                 </div>
@@ -47,11 +67,103 @@
                     <span class="material-symbols-outlined text-gray-400 text-[20px] hover:text-gray-600">visibility_off</span>
                 </button>
             </div>
+            <p id="passwordError" class="text-[10px] font-bold text-red-500 uppercase tracking-tight hidden">La contraseña es obligatoria</p>
         </div>
     </div>
 
-    <button type="submit" class="w-full bg-primary hover:bg-primary-hover text-white font-bold rounded-xl text-sm px-5 py-3.5 text-center shadow-md shadow-[#6e00ff]/20 transition-all mt-4">
+    <button type="submit" class="w-full bg-primary hover:bg-primary-hover text-white font-bold rounded-xl text-sm px-5 py-3.5 text-center shadow-md shadow-[#6e00ff]/20 transition-all mt-4 active:scale-[0.98]">
         Ingresar al Sistema
     </button>
 </form>
+
+<style>
+    .error-shake {
+        animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+        border-color: #ef4444 !important;
+        background-color: #fef2f2 !important;
+    }
+
+    @keyframes shake {
+        10%, 90% { transform: translate3d(-1px, 0, 0); }
+        20%, 80% { transform: translate3d(2px, 0, 0); }
+        30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+        40%, 60% { transform: translate3d(4px, 0, 0); }
+    }
+
+    .entrance-animation {
+        animation: slideInDown 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes slideInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('loginForm');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const emailError = document.getElementById('emailError');
+        const passwordError = document.getElementById('passwordError');
+
+        const validateEmail = (email) => {
+            return email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
+        };
+
+        const showError = (input, errorElement, message) => {
+            input.classList.add('error-shake');
+            errorElement.innerText = message;
+            errorElement.classList.remove('hidden');
+            
+            // Remove shake class after animation so it can be re-triggered
+            setTimeout(() => {
+                input.classList.remove('error-shake');
+                // Keep red border but without shake
+                input.style.borderColor = '#ef4444';
+                input.style.backgroundColor = '#fef2f2';
+            }, 400);
+        };
+
+        const resetError = (input, errorElement) => {
+            input.style.borderColor = '';
+            input.style.backgroundColor = '';
+            errorElement.classList.add('hidden');
+        };
+
+        emailInput.addEventListener('input', () => resetError(emailInput, emailError));
+        passwordInput.addEventListener('input', () => resetError(passwordInput, passwordError));
+
+        form.addEventListener('submit', (e) => {
+            let isValid = true;
+
+            // Email validation
+            if (!emailInput.value.trim()) {
+                showError(emailInput, emailError, 'El correo es obligatorio');
+                isValid = false;
+            } else if (!validateEmail(emailInput.value)) {
+                showError(emailInput, emailError, 'Ingresa un formato de correo válido');
+                isValid = false;
+            }
+
+            // Password validation
+            if (!passwordInput.value.trim()) {
+                showError(passwordInput, passwordError, 'La contraseña es obligatoria');
+                isValid = false;
+            }
+
+            if (!isValid) {
+                e.preventDefault();
+            }
+        });
+    });
+</script>
+
 {% endblock %}

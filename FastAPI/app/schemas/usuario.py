@@ -1,5 +1,6 @@
 from pydantic import BaseModel, EmailStr
 from typing import Optional
+from app.schemas.nivel import NivelResponse
 
 
 class UsuarioBase(BaseModel):
@@ -16,6 +17,10 @@ class UsuarioUpdate(BaseModel):
     nombre_usuario: Optional[str] = None
     correo: Optional[EmailStr] = None
 
+class PasswordUpdate(BaseModel):
+    password_actual: str
+    nueva_password: str
+
 class UsuarioLogin(BaseModel):
     correo: EmailStr
     password: str
@@ -26,10 +31,19 @@ class UsuarioResponse(UsuarioBase):
     xp_total: int = 0
     racha_actual: int = 0
     rol: str = "user"
+    nivel_id: Optional[int] = None
+    nivel: Optional[NivelResponse] = None
 
     class Config:
         from_attributes = True
 
+class NivelResponse(BaseModel):
+    id: int
+    numero: int
+    xp_requerida: int
+
+    class Config:
+        from_attributes = True
 
 # Schema de entrada para el login
 class LoginRequest(BaseModel):

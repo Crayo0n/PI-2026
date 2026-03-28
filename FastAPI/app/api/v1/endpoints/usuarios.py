@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from app.db.database import get_db
-from app.schemas.usuario import UsuarioCreate, UsuarioResponse, UsuarioUpdate, UsuarioLogin, LoginRequest, LoginResponse
+from app.schemas.usuario import UsuarioCreate, UsuarioResponse, UsuarioUpdate, UsuarioLogin, LoginRequest, LoginResponse, PasswordUpdate
 from app.crud import crud_usuario
 
 router = APIRouter()
@@ -11,7 +11,7 @@ router = APIRouter()
 
 @router.post("/login", response_model=LoginResponse, summary="Autenticación de administrador")
 def login(payload: LoginRequest, db: Session = Depends(get_db)):
-    usuario = crud_usuario.verificar_credenciales(db, correo=payload.correo, password=payload.password)
+    usuario = crud_usuario.autenticar_usuario(db, correo=payload.correo, password=payload.password)
     if not usuario:
         raise HTTPException(status_code=401, detail="Credenciales inválidas")
     if usuario.rol != "admin":
@@ -70,3 +70,17 @@ def check_streak(usuario_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
     crud_usuario.verificar_y_resetear_racha(db, usuario_id=usuario_id)
     return crud_usuario.get_usuario(db, usuario_id=usuario_id)
+
+@router.put("/{usuario_id}/password")
+def update_password(usuario_id: int, payload: PasswordUpdate, db: Session = Depends(get_db)):
+    success, msg = crud_usuario.cambiar_password(db, usuario_id, payload.password_actual, payload.nueva_password)
+    if not success:
+        raise HTTPException(status_code=400, detail=msg)
+    return {"mensaje": "Contraseña actualizada exitosamente"}
+
+@router.delete("/{usuario_id}")
+def delete_usuario(usuario_id: int, db: Session = Depends(get_db)):
+    success = crud_usuario.eliminar_usuario(db, usuario_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    return {"mensaje": "Usuario eliminado exitosamente"}
