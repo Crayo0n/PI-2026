@@ -4,7 +4,7 @@ from typing import List
 
 from app.db.database import get_db
 from app.schemas.tarea import TareaCreate, TareaResponse, TareaUpdate
-from app.crud import crud_tarea
+from app.crud import crud_tarea, crud_usuario
 
 router = APIRouter()
 
@@ -33,7 +33,11 @@ def update_tarea(tarea_id: int, tarea_in: TareaUpdate, db: Session = Depends(get
     db_tarea = crud_tarea.get_tarea(db, tarea_id=tarea_id)
     if db_tarea is None:
         raise HTTPException(status_code=404, detail="Tarea no encontrada")
-    return crud_tarea.actualizar_tarea(db=db, db_tarea=db_tarea, tarea_update=tarea_in)
+    updated = crud_tarea.actualizar_tarea(db=db, db_tarea=db_tarea, tarea_update=tarea_in)
+    # Actualizar racha si la tarea fue marcada como completada
+    if tarea_in.estado == "completada" and db_tarea.usuario_id:
+        crud_usuario.actualizar_racha_tras_tarea(db, usuario_id=db_tarea.usuario_id)
+    return updated
 
 @router.delete("/{tarea_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_tarea(tarea_id: int, db: Session = Depends(get_db)):

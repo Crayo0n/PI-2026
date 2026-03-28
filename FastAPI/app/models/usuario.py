@@ -1,6 +1,7 @@
-from sqlalchemy import Integer, String, ForeignKey
+from sqlalchemy import Integer, String, ForeignKey, DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import List, Optional
+from datetime import datetime
 from app.models.base import Base
 
 class Usuario(Base):
@@ -14,6 +15,7 @@ class Usuario(Base):
     rol: Mapped[str] = mapped_column(String, default="user")
     xp_total: Mapped[int] = mapped_column(Integer, default=0)
     racha_actual: Mapped[int] = mapped_column(Integer, default=0)
+    ultima_tarea_completada: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
     zona_horaria: Mapped[str] = mapped_column(String, default="UTC")
 
     nivel: Mapped[Optional["Nivel"]] = relationship("Nivel", back_populates="usuarios")

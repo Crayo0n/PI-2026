@@ -1,18 +1,75 @@
-from flask import Flask, render_template, redirect, url_for, request, flash
+from flask import Flask, render_template, redirect, url_for, request, flash, session
 import requests
+import functools
 
 API_URL = "http://api:8000/api/v1"
 
 app = Flask(__name__)
 app.secret_key = 'priority_pulse_mvp_secure_key'
 
+def login_required(f):
+    @functools.wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'usuario_id' not in session:
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated_function
+
 @app.route('/')
 def index():
+    if 'usuario_id' in session:
+        return redirect(url_for('inicio'))
+    return redirect(url_for('login'))
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if 'usuario_id' in session:
+        return redirect(url_for('inicio'))
+        
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        try:
+            response = requests.post(f'{API_URL}/usuarios/login', json={"correo": email, "password": password})
+            if response.status_code == 200:
+                user = response.json()
+                session['usuario_id'] = user['id']
+                session['nombre_usuario'] = user['nombre_usuario']
+                return redirect(url_for('inicio'))
+            else:
+                flash('Credenciales incorrectas.', 'error')
+        except Exception as e:
+            flash('Error conectando con autenticación.', 'error')
     return render_template('/auth/login.html')
 
-@app.route('/registro')
+@app.route('/registro', methods=['GET', 'POST'])
 def registro():
+    if 'usuario_id' in session:
+        return redirect(url_for('inicio'))
+        
+    if request.method == 'POST':
+        fullname = request.form.get('fullname')
+        email = request.form.get('email')
+        nametag = request.form.get('nametag')
+        password = request.form.get('password')
+        try:
+            payload = {"correo": email, "nombre_usuario": fullname, "password": password}
+            response = requests.post(f'{API_URL}/usuarios/', json=payload)
+            if response.status_code in [200, 201]:
+                user = response.json()
+                session['usuario_id'] = user['id']
+                session['nombre_usuario'] = user['nombre_usuario']
+                return redirect(url_for('inicio'))
+            else:
+                flash('Error al crear cuenta. ' + response.text, 'error')
+        except Exception as e:
+            flash('Error registrando usuario.', 'error')
     return render_template('/auth/registro.html')
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('login'))
 
 @app.route('/terminos')
 def terminos():
@@ -23,10 +80,14 @@ def privacidad():
     return render_template('/legal/privacidad.html')
 
 @app.route('/inicio')
+@login_required
 def inicio():
     tareas = []
+    rutinas = []
+    usuario_id = session['usuario_id']
+
     usuario_info = {
-        "nombre": "MVP Demo User",
+        "nombre": session.get('nombre_usuario', 'Usuario'),
         "nivel": 4,
         "xp": 500,
         "xp_siguiente": 1000,
@@ -34,22 +95,32 @@ def inicio():
     }
     
     try:
-        # Traer tareas (solo las que no pertenecen a una rutina)
+        # Verificar y resetear racha si han pasado mas de 24h
+        requests.post(f'{API_URL}/usuarios/{usuario_id}/check-streak')
+
+        # Fetch tasks and routines for specific user
         response_tareas = requests.get(f'{API_URL}/tareas/')
         if response_tareas.status_code == 200:
             todas_las_tareas = response_tareas.json()
-            tareas = [t for t in todas_las_tareas if not t.get('rutina_id')]
+            tareas = [t for t in todas_las_tareas if not t.get('rutina_id') and t.get('usuario_id') == usuario_id]
             
-        # Traer rutinas
-        response_rutinas = requests.get(f'{API_URL}/rutinas/usuario/1')
+        response_rutinas = requests.get(f'{API_URL}/rutinas/usuario/{usuario_id}')
         if response_rutinas.status_code == 200:
             rutinas = response_rutinas.json()
+
+        response_user = requests.get(f'{API_URL}/usuarios/{usuario_id}')
+        if response_user.status_code == 200:
+            u_data = response_user.json()
+            usuario_info['xp'] = u_data.get('xp_total', 0)
+            usuario_info['racha'] = u_data.get('racha_actual', 0)
+
     except Exception as e:
         print(f"Error cargando desde FastAPI: {e}")
         
     return render_template('/inicio/inicio.html', tareas=tareas, rutinas=rutinas, usuario=usuario_info)
 
 @app.route('/crear-tarea', methods=['POST'])
+@login_required
 def crear_tarea():
     titulo = request.form.get('titulo')
     descripcion = request.form.get('descripcion')
@@ -58,20 +129,19 @@ def crear_tarea():
     tags = request.form.get('tags')
     rutina_id = request.form.get('rutina_id')
     
-    # Calcular propiedades basadas en la prioridad ingresada (1 a 100)
     es_critica = False
     xp_recompensa = 10
     
     if prioridad and prioridad.isdigit():
         p_val = int(prioridad)
-        xp_recompensa = p_val  # Otorga XP proporcional a la prioridad
+        xp_recompensa = p_val
         if p_val >= 80:
             es_critica = True
             
     payload = {
         "titulo": titulo,
         "descripcion": descripcion,
-        "usuario_id": 1,
+        "usuario_id": session['usuario_id'],
         "es_critica": es_critica,
         "xp_recompensa": xp_recompensa,
         "estado": "pendiente"
@@ -79,10 +149,8 @@ def crear_tarea():
     
     if fecha_limite:
         payload["fecha_limite"] = fecha_limite
-        
     if tags:
         payload["tags"] = tags
-        
     if rutina_id:
         payload["rutina_id"] = int(rutina_id)
     
@@ -99,6 +167,7 @@ def crear_tarea():
     return redirect(url_for('inicio'))
 
 @app.route('/editar-tarea/<int:tarea_id>', methods=['POST'])
+@login_required
 def editar_tarea(tarea_id):
     titulo = request.form.get('titulo')
     descripcion = request.form.get('descripcion')
@@ -124,7 +193,6 @@ def editar_tarea(tarea_id):
     
     if fecha_limite:
         payload["fecha_limite"] = fecha_limite
-        
     if tags:
         payload["tags"] = tags
         
@@ -141,6 +209,7 @@ def editar_tarea(tarea_id):
     return redirect(url_for('inicio'))
 
 @app.route('/eliminar-tarea/<int:tarea_id>', methods=['POST'])
+@login_required
 def eliminar_tarea(tarea_id):
     try:
         response = requests.delete(f'{API_URL}/tareas/{tarea_id}')
@@ -155,12 +224,13 @@ def eliminar_tarea(tarea_id):
     return redirect(url_for('inicio'))
 
 @app.route('/crear-rutina', methods=['POST'])
+@login_required
 def crear_rutina():
     nombre = request.form.get('nombre')
     
     payload = {
         "nombre": nombre,
-        "usuario_id": 1,
+        "usuario_id": session['usuario_id'],
         "esta_activa": True
     }
     
@@ -177,13 +247,14 @@ def crear_rutina():
     return redirect(url_for('inicio'))
 
 @app.route('/agregar-rutina-molde', methods=['POST'])
+@login_required
 def agregar_rutina_molde():
     molde = request.form.get('molde')
     
     if molde == 'manana_maestra':
         rutina_payload = {
             "nombre": "Mañana Maestra",
-            "usuario_id": 1,
+            "usuario_id": session['usuario_id'],
             "esta_activa": True
         }
         
@@ -204,7 +275,7 @@ def agregar_rutina_molde():
                     t_payload = {
                         "titulo": t["titulo"],
                         "descripcion": t["descripcion"],
-                        "usuario_id": 1,
+                        "usuario_id": session['usuario_id'],
                         "es_critica": False,
                         "xp_recompensa": t["xp_recompensa"],
                         "estado": "pendiente",
@@ -223,6 +294,7 @@ def agregar_rutina_molde():
     return redirect(url_for('inicio'))
 
 @app.route('/eliminar-rutina/<int:rutina_id>', methods=['POST'])
+@login_required
 def eliminar_rutina(rutina_id):
     try:
         response = requests.delete(f'{API_URL}/rutinas/{rutina_id}')
@@ -237,6 +309,7 @@ def eliminar_rutina(rutina_id):
     return redirect(url_for('inicio'))
 
 @app.route('/toggle-tarea/<int:tarea_id>', methods=['POST'])
+@login_required
 def toggle_tarea(tarea_id):
     try:
         res = requests.get(f'{API_URL}/tareas/{tarea_id}')
@@ -262,22 +335,62 @@ def toggle_tarea(tarea_id):
     return redirect(url_for('inicio'))
 
 @app.route('/rutinas')
+@login_required
 def rutinas():
     return render_template('/rutinas/rutinas.html')
 
 @app.route('/clasificacion')
+@login_required
 def clasificacion():
-    return render_template('/inicio/clasificacion.html')
+    usuarios = []
+    try:
+        response = requests.get(f'{API_URL}/usuarios/leaderboard?limit=50')
+        if response.status_code == 200:
+            usuarios = response.json()
+    except Exception as e:
+        print(f"Error conectando a FastAPI: {e}")
+    return render_template('/inicio/clasificacion.html', usuarios=usuarios)
 
 @app.route('/perfil')
+@login_required
 def perfil():
-    return render_template('/perfil/perfil.html')
+    usuario = {}
+    try:
+        res = requests.get(f'{API_URL}/usuarios/{session["usuario_id"]}')
+        if res.status_code == 200:
+            usuario = res.json()
+    except Exception as e:
+        print(f"Error conectando a FastAPI: {e}")
+    return render_template('/perfil/perfil.html', usuario=usuario)
 
-@app.route('/editar-perfil')
+@app.route('/editar-perfil', methods=['GET', 'POST'])
+@login_required
 def editar_perfil():
-    return render_template('/perfil/editar.html')
+    if request.method == 'POST':
+        nombre_usuario = request.form.get('nombre_usuario')
+        correo = request.form.get('correo')
+        payload = {"nombre_usuario": nombre_usuario, "correo": correo}
+        try:
+            res = requests.put(f'{API_URL}/usuarios/{session["usuario_id"]}', json=payload)
+            if res.status_code == 200:
+                flash('Perfil actualizado con éxito.', 'success')
+            else:
+                flash('No se pudo actualizar el perfil.', 'error')
+        except Exception as e:
+            flash('Error de conexión con el servidor.', 'error')
+        return redirect(url_for('perfil'))
+    else:
+        usuario = {}
+        try:
+            res = requests.get(f'{API_URL}/usuarios/{session["usuario_id"]}')
+            if res.status_code == 200:
+                usuario = res.json()
+        except Exception as e:
+            print(f"Error conectando a FastAPI: {e}")
+        return render_template('/perfil/editar.html', usuario=usuario)
 
 @app.route('/ajustes-notificaciones')
+@login_required
 def ajustes_notificaciones():
     return render_template('/notificaciones/ajuste.html')
 
