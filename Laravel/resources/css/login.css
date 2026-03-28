@@ -16,7 +16,7 @@ body {
 }
 
 .left-panel {
-    background: linear-gradient(135deg, #3b00d1 0%, #6e00ff 100%);
+    background: linear-gradient(135deg, #000000 0%, #6e00ff 100%);
     color: white;
     width: 50%;
     padding: 60px;

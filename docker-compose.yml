@@ -1,0 +1,69 @@
+services:
+  laravel:
+    build: ./Laravel
+    container_name: priority_pulse_laravel
+    ports:
+      - "8000:80"
+    volumes:
+      - ./Laravel:/var/www/html
+      - /var/www/html/vendor
+      - /var/www/html/node_modules
+      - /var/www/html/public/build
+    networks:
+      - priority_pulse_net
+
+  flask:
+    build: ./Flask
+    container_name: priority_pulse_flask
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./Flask:/app
+    environment:
+      - FLASK_APP=app.py       
+      - FLASK_DEBUG=1
+    command: flask run --host=0.0.0.0 --port=5000 
+    networks:
+      - priority_pulse_net
+
+  api:
+    build: ./FastAPI
+    container_name: ServerFastAPI_PI
+    ports:
+      - "8080:8000"
+    volumes:
+      - ./FastAPI:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://admin:123456@postgres:5432/DB_Priority_Pulse
+    networks:
+      - priority_pulse_net
+
+  postgres:
+    image: postgres:15
+    container_name: ServerPostgreSql_PI
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: DB_Priority_Pulse
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d DB_Priority_Pulse"]
+      interval: 5s
+      retries: 5
+      timeout: 5s
+    networks:
+      - priority_pulse_net
+
+networks:
+  priority_pulse_net:
+    driver: bridge
+
+volumes:
+  postgres_data:

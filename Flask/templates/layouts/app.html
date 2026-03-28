@@ -26,19 +26,18 @@
 
     <header class="w-full px-6 py-4 flex items-center justify-between z-20 sticky top-0 bg-[#fcfaff]/80 backdrop-blur-md border-b border-gray-100/50">
         
-        <div class="flex items-center gap-2">
-            <span class="material-symbols-outlined text-[28px] text-primary font-bold">ecg_heart</span>
-            <span class="text-xl font-black tracking-tight text-gray-900">Priority Pulse</span>
+        <div class="flex items-center">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Priority Pulse" class="h-8 w-auto"/>
         </div>
 
         <nav class="hidden md:flex items-center bg-white rounded-full p-1 shadow-sm border border-gray-200">
-            <a href="/inicio" class="px-5 py-1.5 bg-gray-100 rounded-full text-sm font-bold text-gray-900 transition-colors">Inicio</a>
-            <a href="#" class="px-5 py-1.5 text-sm font-bold text-gray-500 hover:text-gray-900 transition-colors">Rutinas</a>
-            <a href="#" class="px-5 py-1.5 text-sm font-bold text-gray-500 hover:text-gray-900 transition-colors">Clasificación</a>
+            <a href="{{ url_for('inicio') }}" class="px-5 py-1.5 {% if request.endpoint == 'inicio' %}bg-gray-100 rounded-full text-gray-900{% else %}text-gray-500 hover:text-gray-900{% endif %} text-sm font-bold transition-colors">Inicio</a>
+            <a href="{{ url_for('rutinas') }}" class="px-5 py-1.5 {% if request.endpoint == 'rutinas' %}bg-gray-100 rounded-full text-gray-900{% else %}text-gray-500 hover:text-gray-900{% endif %} text-sm font-bold transition-colors">Rutinas</a>
+            <a href="{{ url_for('clasificacion') }}" class="px-5 py-1.5 {% if request.endpoint == 'clasificacion' %}bg-gray-100 rounded-full text-gray-900{% else %}text-gray-500 hover:text-gray-900{% endif %} text-sm font-bold transition-colors">Clasificación</a>
         </nav>
 
         <div class="flex items-center gap-6">
-            <button class="text-gray-400 hover:text-gray-600 transition-colors relative">
+            <button onclick="openModal('drawer-notificaciones')" type="button" class="text-gray-400 hover:text-gray-600 transition-colors relative">
                 <span class="material-symbols-outlined text-[24px]">notifications</span>
                 <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full border-2 border-[#fcfaff]"></span>
             </button>
@@ -53,19 +52,47 @@
                 </div>
             </div>
 
-            <button class="w-10 h-10 rounded-full border-2 border-white shadow-sm overflow-hidden focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
+            <a href="{{ url_for('perfil') }}" class="w-10 h-10 rounded-full border-2 border-white shadow-sm overflow-hidden hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 flex-shrink-0">
                 <img src="https://i.pravatar.cc/150?img=5" alt="Perfil" class="w-full h-full object-cover">
-            </button>
+            </a>
         </div>
     </header>
 
     <main class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 z-10">
+        <!-- Flash Messages (Toast Notifications) -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div id="toast-container" class="fixed top-24 right-6 z-[200] flex flex-col gap-3 pointer-events-none">
+                    {% for category, message in messages %}
+                        {% set bg_col = "bg-green-500" if category == 'success' else ("bg-red-500" if category == 'error' else "bg-primary") %}
+                        {% set icon = "check_circle" if category == 'success' else ("error" if category == 'error' else "info") %}
+                        
+                        <div class="toast-message flex items-center gap-3 px-5 py-3.5 rounded-2xl {{ bg_col }} text-white shadow-xl animate-fade-in-up transform transition-all cursor-pointer pointer-events-auto border border-white/20 backdrop-blur-sm" onclick="this.remove()">
+                            <span class="material-symbols-outlined text-[20px]">{{ icon }}</span>
+                            <p class="text-sm font-bold tracking-wide">{{ message }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+                
+                <script>
+                    setTimeout(() => {
+                        const toasts = document.querySelectorAll('.toast-message');
+                        toasts.forEach(toast => {
+                            toast.style.opacity = '0';
+                            toast.style.transform = 'translateY(-10px)';
+                            setTimeout(() => toast.remove(), 300);
+                        });
+                    }, 4000);
+                </script>
+            {% endif %}
+        {% endwith %}
+
         {% block content %}{% endblock %}
     </main>
 
     <div class="fixed inset-0 z-[100] hidden" id="drawer-notificaciones">
         
-        <div class="absolute inset-0 bg-gray-900/20 backdrop-blur-sm transition-opacity"></div>
+        <div class="absolute inset-0 bg-gray-900/20 backdrop-blur-sm transition-opacity" onclick="closeModal('drawer-notificaciones')"></div>
 
         <div class="absolute right-0 top-0 h-full w-full max-w-sm bg-white shadow-2xl flex flex-col transform transition-transform duration-300">
             
@@ -75,7 +102,7 @@
                     <h2 class="text-lg font-black text-gray-900">Notificaciones</h2>
                     <span class="px-2 py-0.5 bg-[#f3ebff] text-primary text-[0.65rem] font-bold rounded-full">3 nuevas</span>
                 </div>
-                <button class="text-gray-400 hover:text-gray-600 transition-colors rounded-full hover:bg-gray-100 p-1">
+                <button onclick="closeModal('drawer-notificaciones')" type="button" class="text-gray-400 hover:text-gray-600 transition-colors rounded-full hover:bg-gray-100 p-1">
                     <span class="material-symbols-outlined text-[20px]">close</span>
                 </button>
             </div>
@@ -170,14 +197,33 @@
             </div>
 
             <div class="p-4 border-t border-gray-100 bg-gray-50/50 mt-auto">
-                <button class="w-full flex items-center justify-center gap-2 text-[0.75rem] font-bold text-gray-500 hover:text-gray-800 transition-colors py-2">
+                <a href="{{ url_for('ajustes_notificaciones') }}" class="w-full flex items-center justify-center gap-2 text-[0.75rem] font-bold text-gray-500 hover:text-gray-800 transition-colors py-2">
                     <span class="material-symbols-outlined text-[16px]">settings</span>
                     Ajustes de notificaciones
-                </button>
+                </a>
             </div>
 
         </div>
     </div>
 
+    <!-- Script Global de Modales (Heredable) 
+         Para evitar duplicidad en las vistas secundarias, está disponible aquí arriba -->
+    <script>
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+        }
+
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+    </script>
 </body>
 </html>

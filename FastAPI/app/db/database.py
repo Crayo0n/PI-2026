@@ -1,0 +1,31 @@
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, declarative_base
+from app.core.config import settings
+import os
+
+# 1. Definiendo la URL de conexion
+DATABASE_URL = getattr(settings, "DATABASE_URL", os.getenv(
+    "DATABASE_URL", 
+    "postgresql://admin:123456@postgres:5432/DB_Priority_Pulse"
+))
+
+# 2. Creamos el motor de conexion
+engine = create_engine(DATABASE_URL)
+
+# 3. Agregamos el gestor de sesiones
+sesionLocal = sessionmaker(
+    autocommit=False, 
+    autoflush=False, 
+    bind=engine
+)
+
+# 4. Base declarativa para modelos
+Base = declarative_base()
+
+# 5. Funcion para el manejo en session en los request
+def get_db():
+    db = sesionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

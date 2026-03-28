@@ -60,3 +60,21 @@ body { display: flex; height: 100vh; background-color: var(--bg-main); overflow:
     flex-direction: column;
     overflow: hidden; 
 }
+
+.sidebar-logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 0;
+    transition: color 0.2s;
+    font-family: inherit;
+}
+.sidebar-logout-btn:hover { color: #ef4444; }
+.sidebar-logout-btn .material-symbols-outlined { font-size: 20px; }

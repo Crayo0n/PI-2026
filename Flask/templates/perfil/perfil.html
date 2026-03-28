@@ -6,25 +6,29 @@
 <div class="flex flex-col gap-6 relative z-10">
 
     <div class="mb-2">
-        <a href="/inicio" class="inline-flex items-center gap-2 px-3 py-1.5 bg-white border border-gray-200 rounded-full text-xs font-bold text-gray-600 hover:text-primary hover:border-primary/30 transition-colors shadow-sm">
+        <a href="/inicio"
+            class="inline-flex items-center gap-2 px-3 py-1.5 bg-white border border-gray-200 rounded-full text-xs font-bold text-gray-600 hover:text-primary hover:border-primary/30 transition-colors shadow-sm">
             <span class="material-symbols-outlined text-[16px]">arrow_back</span>
             Volver
         </a>
     </div>
 
-    <div class="bg-white rounded-[2rem] p-6 sm:p-8 shadow-sm border border-gray-100 flex flex-col sm:flex-row items-center sm:items-start justify-between gap-6">
+    <div
+        class="bg-white rounded-[2rem] p-6 sm:p-8 shadow-sm border border-gray-100 flex flex-col sm:flex-row items-center sm:items-start justify-between gap-6">
         <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6 text-center sm:text-left">
             <div class="relative">
                 <div class="w-24 h-24 rounded-3xl bg-gradient-to-br from-blue-500 to-primary p-1 shadow-md">
-                    <img src="https://i.pravatar.cc/150?img=11" alt="Alex Morgan" class="w-full h-full object-cover rounded-[1.25rem] border-2 border-white">
+                    <img src="https://i.pravatar.cc/150?img=5" alt="Alex Morgan"
+                        class="w-full h-full object-cover rounded-[1.25rem] border-2 border-white">
                 </div>
                 <div class="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 border-4 border-white rounded-full"></div>
             </div>
 
             <div class="flex flex-col justify-center h-full pt-1">
-                <h1 class="text-3xl font-black text-gray-900 mb-2">Alex Morgan</h1>
+                <h1 class="text-3xl font-black text-gray-900 mb-2">{{ usuario.nombre_usuario }}</h1>
                 <div class="flex flex-wrap items-center justify-center sm:justify-start gap-3">
-                    <span class="inline-flex items-center gap-1 px-3 py-1 bg-[#f3ebff] text-primary rounded-full text-[0.7rem] font-bold border border-[#e9d5ff]">
+                    <span
+                        class="inline-flex items-center gap-1 px-3 py-1 bg-[#f3ebff] text-primary rounded-full text-[0.7rem] font-bold border border-[#e9d5ff]">
                         <span class="material-symbols-outlined text-[14px]">diamond</span>
                         Lvl 12 Arquitecto de Enfoque
                     </span>
@@ -32,87 +36,315 @@
                 </div>
             </div>
         </div>
-        <button class="flex items-center gap-2 px-5 py-2.5 bg-gray-50 border border-gray-200 text-gray-700 rounded-xl text-sm font-bold hover:bg-gray-100 transition-colors shrink-0">
-            <span class="material-symbols-outlined text-[18px]">settings</span>
-            Editar Perfil
-        </button>
+        <div class="flex flex-col gap-2 shrink-0">
+            <a href="/editar-perfil"
+                class="flex items-center justify-center gap-2 px-5 py-2.5 bg-gray-50 border border-gray-200 text-gray-700 rounded-xl text-sm font-bold hover:bg-gray-100 transition-colors">
+                <span class="material-symbols-outlined text-[18px]">settings</span>
+                Editar Perfil
+            </a>
+            <a href="/logout"
+                class="flex items-center justify-center gap-2 px-5 py-2.5 bg-red-50 border border-red-200 text-red-600 rounded-xl text-sm font-bold hover:bg-red-100 transition-colors">
+                <span class="material-symbols-outlined text-[18px]">logout</span>
+                Cerrar Sesión
+            </a>
+        </div>
     </div>
 
     <div class="flex gap-8 border-b border-gray-200 px-4 mt-2">
-        <button class="pb-4 border-b-2 border-transparent text-gray-400 hover:text-gray-600 font-bold text-sm flex items-center gap-2 transition-colors">
+        <button id="btn-tab-actividad" onclick="switchTab('actividad')" type="button"
+            class="pb-4 border-b-2 border-transparent text-gray-400 hover:text-gray-600 font-bold text-sm flex items-center gap-2 transition-colors">
             <span class="material-symbols-outlined text-[18px]">analytics</span> Actividad
         </button>
-        <button class="pb-4 border-b-2 border-primary text-primary font-bold text-sm flex items-center gap-2">
+        <button id="btn-tab-logros" onclick="switchTab('logros')" type="button"
+            class="pb-4 border-b-2 border-primary text-primary font-bold text-sm flex items-center gap-2 transition-colors">
             <span class="material-symbols-outlined text-[18px]">emoji_events</span> Logros
         </button>
     </div>
 
-    <div id="tab-logros" class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 mt-2">
-        
+    <!-- Pestaña: Actividad (Dashboard Completo) -->
+    <div id="tab-actividad" class="hidden animate-fade-in-up mt-2">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+
+            <!-- Columna Izquierda (Actividad + Amigos) -->
+            <div class="lg:col-span-2 space-y-6">
+
+                <!-- Tarjeta Actividad (Git Calendar) -->
+                <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-gray-100">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                        <div>
+                            <h3 class="flex items-center gap-2 text-lg font-black text-gray-900">
+                                <span class="material-symbols-outlined text-primary">calendar_month</span> Actividad
+                            </h3>
+                            <p class="text-[0.65rem] font-bold text-gray-400 mt-1">1,248 contribuciones en el año
+                                anterior</p>
+                        </div>
+                        <div class="flex items-center gap-2 text-[0.65rem] font-bold text-gray-400">
+                            <span>Menos</span>
+                            <div class="w-[10px] h-[10px] rounded-[2px] bg-gray-100"></div>
+                            <div class="w-[10px] h-[10px] rounded-[2px] bg-primary/20"></div>
+                            <div class="w-[10px] h-[10px] rounded-[2px] bg-primary/40"></div>
+                            <div class="w-[10px] h-[10px] rounded-[2px] bg-primary/60"></div>
+                            <div class="w-[10px] h-[10px] rounded-[2px] bg-primary"></div>
+                            <span>Más</span>
+                        </div>
+                    </div>
+
+                    <div class="w-full overflow-x-auto pb-2 custom-scrollbar">
+                        <div class="min-w-[650px] flex gap-2">
+                            <!-- Días de la semana -->
+                            <div class="flex flex-col justify-around text-[0.55rem] font-bold text-gray-400 w-6">
+                                <span>Lun</span>
+                                <span>Mier</span>
+                                <span>Vie</span>
+                            </div>
+                            <!-- Matriz de cuadritos dinámica -->
+                            <div class="flex-1 grid grid-rows-5 grid-flow-col gap-[4px]" id="github-calendar">
+                                <!-- Reemplazado vía Script abajo -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta Amigos -->
+                <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-gray-100">
+                    <h3 class="text-lg font-black text-gray-900 mb-6">Amigos</h3>
+
+                    <div class="space-y-4">
+                        <!-- Amigo 1 -->
+                        <div
+                            class="flex items-center justify-between border-b border-gray-50 pb-4 last:border-0 last:pb-0">
+                            <div class="flex items-center gap-4">
+                                <div onclick="openModal('modal-perfil-amigo')"
+                                    class="w-12 h-12 rounded-full overflow-hidden border-2 border-transparent hover:border-primary transition-all cursor-pointer shadow-sm">
+                                    <img src="https://i.pravatar.cc/150?img=47" alt="Amigo"
+                                        class="w-full h-full object-cover">
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-black text-gray-900 leading-tight">Luis Eduardo Satano
+                                        Delgado</h4>
+                                    <span
+                                        class="inline-block mt-1 px-2 py-0.5 bg-gray-100 text-gray-500 text-[0.55rem] font-black tracking-widest uppercase rounded">8
+                                        Días de Racha</span>
+                                </div>
+                            </div>
+                            <button onclick="openModal('modal-perfil-amigo')"
+                                class="text-[0.65rem] font-bold text-gray-400 hover:text-primary transition-colors">
+                                Ver Perfil
+                            </button>
+                        </div>
+
+                        <!-- Amigo 2 -->
+                        <div
+                            class="flex items-center justify-between border-b border-gray-50 pb-4 last:border-0 last:pb-0">
+                            <div class="flex items-center gap-4">
+                                <div onclick="openModal('modal-perfil-amigo')"
+                                    class="w-12 h-12 rounded-full overflow-hidden border-2 border-transparent hover:border-primary transition-all cursor-pointer shadow-sm">
+                                    <img src="https://i.pravatar.cc/150?img=33" alt="Amigo"
+                                        class="w-full h-full object-cover">
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-black text-gray-900 leading-tight">Luis Eduardo Satano
+                                        Delgado</h4>
+                                    <span
+                                        class="inline-block mt-1 px-2 py-0.5 bg-gray-100 text-gray-500 text-[0.55rem] font-black tracking-widest uppercase rounded">Sin
+                                        Racha</span>
+                                </div>
+                            </div>
+                            <button onclick="openModal('modal-perfil-amigo')"
+                                class="text-[0.65rem] font-bold text-gray-400 hover:text-primary transition-colors">
+                                Ver Perfil
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna Derecha (Racha, Medallas, Resumen) -->
+            <div class="space-y-6 mt-2 lg:mt-0">
+
+                <!-- Tarjeta Racha (Modo Oscuro) -->
+                <div
+                    class="bg-gradient-to-b from-[#1b1f33] to-[#121422] rounded-3xl p-8 shadow-xl border border-gray-800 text-center flex flex-col items-center relative overflow-hidden">
+                    <div
+                        class="w-14 h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mb-5 shadow-inner relative z-10">
+                        <span class="material-symbols-outlined text-[26px] text-orange-500"
+                            style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+                    </div>
+                    <h2 class="text-4xl font-black text-orange-500 mb-1 relative z-10">{{ usuario.racha_actual }} Días</h2>
+                    <p class="text-[0.65rem] font-medium text-gray-400 mb-6 relative z-10">Actual Racha de Focus</p>
+
+                    <div class="w-full relative z-10 mb-2">
+                        <div class="h-[6px] w-full bg-gray-800 rounded-full overflow-hidden">
+                            <div class="h-full bg-gradient-to-r from-orange-600 to-orange-400 rounded-full"
+                                style="width: 75%"></div>
+                        </div>
+                    </div>
+                    <p class="text-[0.6rem] font-medium text-gray-500 relative z-10 mt-1">5 días de Imparable</p>
+                </div>
+
+                <!-- Tarjeta Mini Medallas -->
+                <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-gray-100">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-sm font-black text-gray-900">Medallas</h3>
+                        <button onclick="switchTab('logros')"
+                            class="text-[0.65rem] font-bold text-primary hover:text-primary-hover transition-colors">Ver
+                            todas</button>
+                    </div>
+
+                    <div class="flex justify-between">
+                        <div class="flex flex-col items-center text-center group cursor-pointer">
+                            <div
+                                class="w-12 h-12 rounded-full bg-yellow-50 text-yellow-500 flex items-center justify-center mb-2 border border-yellow-100 relative shadow-sm group-hover:scale-110 transition-transform">
+                                <span class="material-symbols-outlined text-[20px]">wb_sunny</span>
+                            </div>
+                            <span class="text-[0.55rem] font-black text-gray-500">Madrugador</span>
+                        </div>
+                        <div class="flex flex-col items-center text-center group cursor-pointer">
+                            <div
+                                class="w-12 h-12 rounded-full bg-purple-50 text-primary flex items-center justify-center mb-2 border border-purple-100 relative shadow-sm group-hover:scale-110 transition-transform">
+                                <span class="material-symbols-outlined text-[20px]">psychology</span>
+                            </div>
+                            <span class="text-[0.55rem] font-black text-gray-500">Trabajador</span>
+                        </div>
+                        <div class="flex flex-col items-center text-center group cursor-pointer">
+                            <div
+                                class="w-12 h-12 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center mb-2 border border-blue-100 relative shadow-sm group-hover:scale-110 transition-transform">
+                                <span class="material-symbols-outlined text-[20px]">rocket_launch</span>
+                            </div>
+                            <span class="text-[0.55rem] font-black text-gray-500">Organizador</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta Resumen de Actividad -->
+                <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-gray-100">
+                    <h3 class="text-sm font-black text-gray-900 mb-4">Resumen de Actividad</h3>
+
+                    <div class="space-y-3">
+                        <div class="bg-gray-50/80 rounded-[1rem] p-4 flex items-center gap-4 border border-gray-100">
+                            <div
+                                class="w-10 h-10 rounded-full bg-green-50 text-green-500 flex items-center justify-center flex-shrink-0 border border-green-100">
+                                <span class="material-symbols-outlined text-[18px]">check_circle</span>
+                            </div>
+                            <div>
+                                <p class="text-[0.55rem] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Total
+                                    de Actividades</p>
+                                <p class="text-lg font-black text-gray-900 leading-none">1,248</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-gray-50/80 rounded-[1rem] p-4 flex items-center gap-4 border border-gray-100">
+                            <div
+                                class="w-10 h-10 rounded-full bg-[#f3ebff] text-primary flex items-center justify-center flex-shrink-0 border border-purple-100">
+                                <span class="material-symbols-outlined text-[18px]">timer</span>
+                            </div>
+                            <div>
+                                <p class="text-[0.55rem] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Horas
+                                    de Concentración</p>
+                                <p class="text-lg font-black text-gray-900 leading-none">482h</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Pestaña: Logros -->
+    <div id="tab-logros" class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 mt-2 animate-fade-in-up">
+
         <div class="lg:col-span-2 bg-white rounded-3xl shadow-sm border border-gray-100 p-6 sm:p-8">
-            
+
             <div class="flex justify-between items-start mb-8">
                 <div>
                     <h3 class="flex items-center gap-2 text-xl font-black text-gray-900">
                         <span class="material-symbols-outlined text-primary">emoji_events</span>
                         Medallero
                     </h3>
-                    <p class="text-sm font-medium text-gray-500 mt-1">Colecciona medallas completando desafíos y manteniendo rachas.</p>
+                    <p class="text-sm font-medium text-gray-500 mt-1">Colecciona medallas completando desafíos y
+                        manteniendo rachas.</p>
                 </div>
-                <span class="px-3 py-1 bg-gray-50 text-gray-500 text-xs font-bold rounded-lg border border-gray-200">Total: <span class="text-primary font-black">18/45</span></span>
+                <span
+                    class="px-3 py-1 bg-gray-50 text-gray-500 text-xs font-bold rounded-lg border border-gray-200">Total:
+                    <span class="text-primary font-black">18/45</span></span>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                
-                <div class="border border-yellow-100 bg-gradient-to-b from-yellow-50/50 to-white rounded-2xl p-6 flex flex-col items-center text-center relative hover:shadow-md transition-shadow">
-                    <div class="w-16 h-16 rounded-full bg-yellow-100 text-yellow-500 flex items-center justify-center shadow-inner mb-4 relative border-4 border-white">
+
+                <div
+                    class="border border-yellow-100 bg-gradient-to-b from-yellow-50/50 to-white rounded-2xl p-6 flex flex-col items-center text-center relative hover:shadow-md transition-shadow">
+                    <div
+                        class="w-16 h-16 rounded-full bg-yellow-100 text-yellow-500 flex items-center justify-center shadow-inner mb-4 relative border-4 border-white">
                         <span class="material-symbols-outlined text-[32px]">wb_sunny</span>
-                        <span class="absolute -bottom-2 px-2 py-0.5 bg-yellow-400 text-yellow-900 text-[0.55rem] font-black rounded-full border-2 border-white">Nvl 3</span>
+                        <span
+                            class="absolute -bottom-2 px-2 py-0.5 bg-yellow-400 text-yellow-900 text-[0.55rem] font-black rounded-full border-2 border-white">Nvl
+                            3</span>
                     </div>
                     <h4 class="font-black text-gray-900 text-sm mb-1">Madrugador</h4>
-                    <p class="text-[0.65rem] font-medium text-gray-500 leading-tight">Completa 50 tareas antes de las 8 AM</p>
+                    <p class="text-[0.65rem] font-medium text-gray-500 leading-tight">Completa 50 tareas antes de las 8
+                        AM</p>
                 </div>
 
-                <div class="border border-slate-200 bg-gradient-to-b from-slate-50/50 to-white rounded-2xl p-6 flex flex-col items-center text-center relative hover:shadow-md transition-shadow">
-                    <div class="w-16 h-16 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center shadow-inner mb-4 relative border-4 border-white">
+                <div
+                    class="border border-slate-200 bg-gradient-to-b from-slate-50/50 to-white rounded-2xl p-6 flex flex-col items-center text-center relative hover:shadow-md transition-shadow">
+                    <div
+                        class="w-16 h-16 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center shadow-inner mb-4 relative border-4 border-white">
                         <span class="material-symbols-outlined text-[32px]">psychology</span>
-                        <span class="absolute -bottom-2 px-2 py-0.5 bg-slate-300 text-slate-700 text-[0.55rem] font-black rounded-full border-2 border-white">Nvl 2</span>
+                        <span
+                            class="absolute -bottom-2 px-2 py-0.5 bg-slate-300 text-slate-700 text-[0.55rem] font-black rounded-full border-2 border-white">Nvl
+                            2</span>
                     </div>
                     <h4 class="font-black text-gray-900 text-sm mb-1">Enfoque Profundo</h4>
-                    <p class="text-[0.65rem] font-medium text-gray-500 leading-tight">4 horas de trabajo sin interrupciones</p>
+                    <p class="text-[0.65rem] font-medium text-gray-500 leading-tight">4 horas de trabajo sin
+                        interrupciones</p>
                 </div>
 
-                <div class="border border-orange-100 bg-gradient-to-b from-orange-50/50 to-white rounded-2xl p-6 flex flex-col items-center text-center relative hover:shadow-md transition-shadow">
-                    <div class="w-16 h-16 rounded-full bg-orange-100 text-orange-500 flex items-center justify-center shadow-inner mb-4 relative border-4 border-white">
+                <div
+                    class="border border-orange-100 bg-gradient-to-b from-orange-50/50 to-white rounded-2xl p-6 flex flex-col items-center text-center relative hover:shadow-md transition-shadow">
+                    <div
+                        class="w-16 h-16 rounded-full bg-orange-100 text-orange-500 flex items-center justify-center shadow-inner mb-4 relative border-4 border-white">
                         <span class="material-symbols-outlined text-[32px]">rocket_launch</span>
-                        <span class="absolute -bottom-2 px-2 py-0.5 bg-orange-400 text-orange-900 text-[0.55rem] font-black rounded-full border-2 border-white">Nvl 1</span>
+                        <span
+                            class="absolute -bottom-2 px-2 py-0.5 bg-orange-400 text-orange-900 text-[0.55rem] font-black rounded-full border-2 border-white">Nvl
+                            1</span>
                     </div>
                     <h4 class="font-black text-gray-900 text-sm mb-1">Maestro de Tareas</h4>
-                    <p class="text-[0.65rem] font-medium text-gray-500 leading-tight">Completa 10 tareas en un solo día</p>
+                    <p class="text-[0.65rem] font-medium text-gray-500 leading-tight">Completa 10 tareas en un solo día
+                    </p>
                 </div>
 
-                <div class="border border-gray-100 bg-gray-50/50 rounded-2xl p-6 flex flex-col items-center text-center relative opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all">
-                    <div class="w-16 h-16 rounded-full bg-gray-200 text-gray-400 flex items-center justify-center shadow-inner mb-4 relative border-4 border-white">
+                <div
+                    class="border border-gray-100 bg-gray-50/50 rounded-2xl p-6 flex flex-col items-center text-center relative opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all">
+                    <div
+                        class="w-16 h-16 rounded-full bg-gray-200 text-gray-400 flex items-center justify-center shadow-inner mb-4 relative border-4 border-white">
                         <span class="material-symbols-outlined text-[32px]">calendar_month</span>
-                        <span class="absolute -bottom-2 px-2 py-0.5 bg-gray-300 text-gray-600 text-[0.55rem] font-black rounded-full border-2 border-white">Bloqueado</span>
+                        <span
+                            class="absolute -bottom-2 px-2 py-0.5 bg-gray-300 text-gray-600 text-[0.55rem] font-black rounded-full border-2 border-white">Bloqueado</span>
                     </div>
                     <h4 class="font-black text-gray-900 text-sm mb-1">Racha Mensual</h4>
                     <p class="text-[0.65rem] font-medium text-gray-500 leading-tight">Mantén tu racha por 30 días</p>
                 </div>
 
-                <div class="border border-gray-100 bg-gray-50/50 rounded-2xl p-6 flex flex-col items-center text-center relative opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all">
-                    <div class="w-16 h-16 rounded-full bg-gray-200 text-gray-400 flex items-center justify-center shadow-inner mb-4 relative border-4 border-white">
+                <div
+                    class="border border-gray-100 bg-gray-50/50 rounded-2xl p-6 flex flex-col items-center text-center relative opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all">
+                    <div
+                        class="w-16 h-16 rounded-full bg-gray-200 text-gray-400 flex items-center justify-center shadow-inner mb-4 relative border-4 border-white">
                         <span class="material-symbols-outlined text-[32px]">group</span>
-                        <span class="absolute -bottom-2 px-2 py-0.5 bg-gray-300 text-gray-600 text-[0.55rem] font-black rounded-full border-2 border-white">Bloqueado</span>
+                        <span
+                            class="absolute -bottom-2 px-2 py-0.5 bg-gray-300 text-gray-600 text-[0.55rem] font-black rounded-full border-2 border-white">Bloqueado</span>
                     </div>
                     <h4 class="font-black text-gray-900 text-sm mb-1">Social</h4>
                     <p class="text-[0.65rem] font-medium text-gray-500 leading-tight">Conecta con 10 amigos</p>
                 </div>
 
-                <div class="border border-gray-100 bg-gray-50/50 rounded-2xl p-6 flex flex-col items-center text-center relative opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all">
-                    <div class="w-16 h-16 rounded-full bg-gray-200 text-gray-400 flex items-center justify-center shadow-inner mb-4 relative border-4 border-white">
+                <div
+                    class="border border-gray-100 bg-gray-50/50 rounded-2xl p-6 flex flex-col items-center text-center relative opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all">
+                    <div
+                        class="w-16 h-16 rounded-full bg-gray-200 text-gray-400 flex items-center justify-center shadow-inner mb-4 relative border-4 border-white">
                         <span class="material-symbols-outlined text-[32px]">bolt</span>
-                        <span class="absolute -bottom-2 px-2 py-0.5 bg-gray-300 text-gray-600 text-[0.55rem] font-black rounded-full border-2 border-white">Bloqueado</span>
+                        <span
+                            class="absolute -bottom-2 px-2 py-0.5 bg-gray-300 text-gray-600 text-[0.55rem] font-black rounded-full border-2 border-white">Bloqueado</span>
                     </div>
                     <h4 class="font-black text-gray-900 text-sm mb-1">Velocista</h4>
                     <p class="text-[0.65rem] font-medium text-gray-500 leading-tight">Completa 5 tareas en 1 hora</p>
@@ -122,13 +354,16 @@
         </div>
 
         <div class="space-y-6">
-            
-            <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 text-center flex flex-col items-center">
-                
+
+            <div
+                class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 text-center flex flex-col items-center">
+
                 <div class="relative w-28 h-28 mb-4 flex items-center justify-center">
                     <svg class="w-full h-full transform -rotate-90 absolute top-0 left-0" viewBox="0 0 100 100">
                         <circle cx="50" cy="50" r="45" fill="none" stroke="#f3f4f6" stroke-width="8"></circle>
-                        <circle cx="50" cy="50" r="45" fill="none" stroke="#6e00ff" stroke-width="8" stroke-dasharray="283" stroke-dashoffset="141.5" stroke-linecap="round" class="transition-all duration-1000"></circle>
+                        <circle cx="50" cy="50" r="45" fill="none" stroke="#6e00ff" stroke-width="8"
+                            stroke-dasharray="283" stroke-dashoffset="141.5" stroke-linecap="round"
+                            class="transition-all duration-1000"></circle>
                     </svg>
                     <div class="flex flex-col items-center z-10">
                         <span class="text-3xl font-black text-gray-900 leading-none">12</span>
@@ -138,8 +373,9 @@
 
                 <h3 class="text-lg font-black text-gray-900 mb-1">Arquitecto de Enfoque</h3>
                 <p class="text-sm font-black text-primary mb-2">2500 / 5000 XP</p>
-                <p class="text-[0.65rem] font-bold text-gray-400 uppercase tracking-wide mb-4">¡A mitad de camino al nivel 13!</p>
-                
+                <p class="text-[0.65rem] font-bold text-gray-400 uppercase tracking-wide mb-4">¡A mitad de camino al
+                    nivel 13!</p>
+
                 <div class="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
                     <div class="w-1/2 h-full bg-gradient-to-r from-blue-500 to-primary rounded-full"></div>
                 </div>
@@ -152,33 +388,42 @@
                 </h3>
 
                 <div class="space-y-4">
-                    <div class="flex gap-4 p-4 rounded-2xl border border-gray-50 bg-gray-50/50 hover:bg-white hover:shadow-sm transition-all">
-                        <div class="w-8 h-8 rounded-full bg-green-100 text-green-500 flex items-center justify-center shrink-0">
+                    <div
+                        class="flex gap-4 p-4 rounded-2xl border border-gray-50 bg-gray-50/50 hover:bg-white hover:shadow-sm transition-all">
+                        <div
+                            class="w-8 h-8 rounded-full bg-green-100 text-green-500 flex items-center justify-center shrink-0">
                             <span class="material-symbols-outlined text-[16px]">check_circle</span>
                         </div>
                         <div>
                             <p class="text-sm font-black text-gray-900">+50 XP</p>
-                            <p class="text-xs font-medium text-gray-500 leading-snug">Por cada tarea completada a tiempo.</p>
+                            <p class="text-xs font-medium text-gray-500 leading-snug">Por cada tarea completada a
+                                tiempo.</p>
                         </div>
                     </div>
 
-                    <div class="flex gap-4 p-4 rounded-2xl border border-gray-50 bg-gray-50/50 hover:bg-white hover:shadow-sm transition-all">
-                        <div class="w-8 h-8 rounded-full bg-orange-100 text-orange-500 flex items-center justify-center shrink-0">
+                    <div
+                        class="flex gap-4 p-4 rounded-2xl border border-gray-50 bg-gray-50/50 hover:bg-white hover:shadow-sm transition-all">
+                        <div
+                            class="w-8 h-8 rounded-full bg-orange-100 text-orange-500 flex items-center justify-center shrink-0">
                             <span class="material-symbols-outlined text-[16px]">local_fire_department</span>
                         </div>
                         <div>
                             <p class="text-sm font-black text-gray-900">+100 XP</p>
-                            <p class="text-xs font-medium text-gray-500 leading-snug">Por mantener tu racha diaria activa.</p>
+                            <p class="text-xs font-medium text-gray-500 leading-snug">Por mantener tu racha diaria
+                                activa.</p>
                         </div>
                     </div>
 
-                    <div class="flex gap-4 p-4 rounded-2xl border border-gray-50 bg-gray-50/50 hover:bg-white hover:shadow-sm transition-all">
-                        <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-500 flex items-center justify-center shrink-0">
+                    <div
+                        class="flex gap-4 p-4 rounded-2xl border border-gray-50 bg-gray-50/50 hover:bg-white hover:shadow-sm transition-all">
+                        <div
+                            class="w-8 h-8 rounded-full bg-blue-100 text-blue-500 flex items-center justify-center shrink-0">
                             <span class="material-symbols-outlined text-[16px]">checklist</span>
                         </div>
                         <div>
                             <p class="text-sm font-black text-gray-900">+500 XP</p>
-                            <p class="text-xs font-medium text-gray-500 leading-snug">Por completar una rutina completa.</p>
+                            <p class="text-xs font-medium text-gray-500 leading-snug">Por completar una rutina completa.
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -189,61 +434,123 @@
 </div>
 
 <div class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 hidden" id="modal-perfil-amigo">
-        
-        <div class="absolute inset-0 bg-gray-900/40 backdrop-blur-sm transition-opacity"></div>
 
-        <div class="relative w-full max-w-sm transform overflow-hidden rounded-3xl bg-white p-8 text-center shadow-2xl flex flex-col items-center animate-fade-in-up">
-            
-            <button class="absolute top-4 right-4 p-2 rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors">
-                <span class="material-symbols-outlined text-[20px]">close</span>
-            </button>
+    <div class="absolute inset-0 bg-gray-900/40 backdrop-blur-sm transition-opacity"
+        onclick="closeModal('modal-perfil-amigo')"></div>
 
-            <div class="relative w-24 h-24 mb-4">
-                <img src="https://i.pravatar.cc/150?img=47" alt="Sarah Jenkins" class="w-full h-full rounded-full object-cover border-4 border-white shadow-md">
-                <div class="absolute bottom-1 right-1 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></div>
-            </div>
+    <div
+        class="relative w-full max-w-sm transform overflow-hidden rounded-3xl bg-white p-8 text-center shadow-2xl flex flex-col items-center animate-fade-in-up">
 
-            <h2 class="text-2xl font-black text-gray-900 mb-2">Sarah Jenkins</h2>
-            <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-[#f3ebff] text-primary rounded-full text-[0.65rem] font-bold uppercase tracking-wider mb-6">
-                <span class="material-symbols-outlined text-[14px]">diamond</span>
-                Nivel 8 Exploradora
-            </div>
+        <button onclick="closeModal('modal-perfil-amigo')" type="button"
+            class="absolute top-4 right-4 p-2 rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors">
+            <span class="material-symbols-outlined text-[20px]">close</span>
+        </button>
 
-            <div class="flex flex-col items-center mb-8">
-                <div class="w-12 h-12 rounded-full bg-orange-50 text-orange-500 flex items-center justify-center mb-2 shadow-inner border border-orange-100">
-                    <span class="material-symbols-outlined text-[24px]">local_fire_department</span>
-                </div>
-                <h3 class="text-lg font-black text-gray-900 leading-tight">Racha de 8 Días</h3>
-                <p class="text-xs font-medium text-gray-500">¡Está en llamas!</p>
-            </div>
-
-            <div class="w-full mb-4">
-                <h4 class="text-[0.65rem] font-bold text-gray-400 uppercase tracking-widest mb-3">Estadísticas de Rendimiento</h4>
-                
-                <div class="grid grid-cols-2 gap-3">
-                    <div class="bg-white border border-gray-100 rounded-2xl p-4 flex flex-col items-center shadow-sm">
-                        <div class="w-8 h-8 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center mb-2">
-                            <span class="material-symbols-outlined text-[16px]">check_circle</span>
-                        </div>
-                        <span class="text-lg font-black text-gray-900 leading-tight">842</span>
-                        <span class="text-[0.65rem] font-medium text-gray-500 mt-0.5">Tareas Totales</span>
-                    </div>
-                    
-                    <div class="bg-white border border-gray-100 rounded-2xl p-4 flex flex-col items-center shadow-sm">
-                        <div class="w-8 h-8 rounded-full bg-[#f3ebff] text-primary flex items-center justify-center mb-2">
-                            <span class="material-symbols-outlined text-[16px]">timer</span>
-                        </div>
-                        <span class="text-lg font-black text-gray-900 leading-tight">315h</span>
-                        <span class="text-[0.65rem] font-medium text-gray-500 mt-0.5">Horas de Foco</span>
-                    </div>
-                </div>
-            </div>
-
-            <button class="w-full py-3.5 mt-2 rounded-xl bg-gradient-to-r from-blue-500 to-primary text-white text-sm font-bold shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-0.5 transition-all active:scale-[0.98] flex items-center justify-center gap-2">
-                <span class="material-symbols-outlined text-[18px]">favorite</span>
-                Dar Me Gusta
-            </button>
-
+        <div class="relative w-24 h-24 mb-4">
+            <img src="https://i.pravatar.cc/150?img=47" alt="Sarah Jenkins"
+                class="w-full h-full rounded-full object-cover border-4 border-white shadow-md">
+            <div class="absolute bottom-1 right-1 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></div>
         </div>
+
+        <h2 class="text-2xl font-black text-gray-900 mb-2">Sarah Jenkins</h2>
+        <div
+            class="inline-flex items-center gap-1.5 px-3 py-1 bg-[#f3ebff] text-primary rounded-full text-[0.65rem] font-bold uppercase tracking-wider mb-6">
+            <span class="material-symbols-outlined text-[14px]">diamond</span>
+            Nivel 8 Exploradora
+        </div>
+
+        <div class="flex flex-col items-center mb-8">
+            <div
+                class="w-12 h-12 rounded-full bg-orange-50 text-orange-500 flex items-center justify-center mb-2 shadow-inner border border-orange-100">
+                <span class="material-symbols-outlined text-[24px]">local_fire_department</span>
+            </div>
+            <h3 class="text-lg font-black text-gray-900 leading-tight">Racha de 8 Días</h3>
+            <p class="text-xs font-medium text-gray-500">¡Está en llamas!</p>
+        </div>
+
+        <div class="w-full mb-4">
+            <h4 class="text-[0.65rem] font-bold text-gray-400 uppercase tracking-widest mb-3">Estadísticas de
+                Rendimiento</h4>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div class="bg-white border border-gray-100 rounded-2xl p-4 flex flex-col items-center shadow-sm">
+                    <div class="w-8 h-8 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center mb-2">
+                        <span class="material-symbols-outlined text-[16px]">check_circle</span>
+                    </div>
+                    <span class="text-lg font-black text-gray-900 leading-tight">842</span>
+                    <span class="text-[0.65rem] font-medium text-gray-500 mt-0.5">Tareas Totales</span>
+                </div>
+
+                <div class="bg-white border border-gray-100 rounded-2xl p-4 flex flex-col items-center shadow-sm">
+                    <div class="w-8 h-8 rounded-full bg-[#f3ebff] text-primary flex items-center justify-center mb-2">
+                        <span class="material-symbols-outlined text-[16px]">timer</span>
+                    </div>
+                    <span class="text-lg font-black text-gray-900 leading-tight">315h</span>
+                    <span class="text-[0.65rem] font-medium text-gray-500 mt-0.5">Horas de Foco</span>
+                </div>
+            </div>
+        </div>
+
+        <button
+            class="w-full py-3.5 mt-2 rounded-xl bg-gradient-to-r from-blue-500 to-primary text-white text-sm font-bold shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-0.5 transition-all active:scale-[0.98] flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">favorite</span>
+            Dar Me Gusta
+        </button>
+
     </div>
+</div>
+<!-- Script de Modales y Utilidades -->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const cal = document.getElementById("github-calendar");
+        if (cal) {
+            const classes = ['bg-gray-100', 'bg-primary/20', 'bg-primary/40', 'bg-primary/60', 'bg-primary'];
+            // Generamos aprox 200 cuadritos
+            for (let i = 0; i < 210; i++) {
+                const div = document.createElement("div");
+                div.className = "w-[12px] h-[12px] rounded-[3px] cursor-pointer hover:ring-2 hover:ring-primary/50 transition-all " + classes[Math.floor(Math.random() * classes.length)];
+                cal.appendChild(div);
+            }
+        }
+    });
+
+    function switchTab(tab) {
+        const tabActividad = document.getElementById('tab-actividad');
+        const tabLogros = document.getElementById('tab-logros');
+        const btnActividad = document.getElementById('btn-tab-actividad');
+        const btnLogros = document.getElementById('btn-tab-logros');
+
+        if (tab === 'actividad') {
+            tabActividad.classList.remove('hidden');
+            tabLogros.classList.add('hidden');
+            btnActividad.classList.remove('border-transparent', 'text-gray-400');
+            btnActividad.classList.add('border-primary', 'text-primary');
+            btnLogros.classList.remove('border-primary', 'text-primary');
+            btnLogros.classList.add('border-transparent', 'text-gray-400');
+        } else {
+            tabActividad.classList.add('hidden');
+            tabLogros.classList.remove('hidden');
+            btnLogros.classList.remove('border-transparent', 'text-gray-400');
+            btnLogros.classList.add('border-primary', 'text-primary');
+            btnActividad.classList.remove('border-primary', 'text-primary');
+            btnActividad.classList.add('border-transparent', 'text-gray-400');
+        }
+    }
+
+    function openModal(id) {
+        const modal = document.getElementById(id);
+        if (modal) {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+    }
+
+    function closeModal(id) {
+        const modal = document.getElementById(id);
+        if (modal) {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+    }
+</script>
 {% endblock %}
